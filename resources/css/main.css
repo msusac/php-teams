@@ -1,0 +1,121 @@
+body{
+    background-image: url('../img/background.jpg');
+}
+
+header nav, footer{
+    background: linear-gradient(110deg, rgba(246,208,109,1) 0%, rgba(223,156,28,1) 35%, rgba(161,72,4,1) 100%);
+
+    border: 1px outset black;
+    
+    margin:10px;
+
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+
+}
+
+header nav ul li a, ul.sidenav li a{
+    font-size: 23px;
+    font-weight: bolder;
+}
+
+header nav ul li a:hover, ul.sidenav li a:hover{
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+header nav ul li a, header nav div a.brand-logo, ul.sidenav li a{
+    -webkit-text-fill-color: black;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+}
+
+header nav ul li a:hover, header nav div a.brand-logo:hover, ul.sidenav li a:hover{
+    -webkit-text-fill-color: green;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+}
+
+
+ul.sidenav{
+    background: linear-gradient(110deg, rgba(246,208,109,1) 0%, rgba(223,156,28,1) 35%, rgba(161,72,4,1) 100%);
+    
+    border-left: 3px outset white;
+    border-right: 3px outset black;
+}
+
+section {
+    background: linear-gradient(139deg, rgba(246,208,109,0.8) 0%, rgba(223,156,28,0.8) 35%, rgba(161,72,4,0.8) 100%);
+
+    border:5px outset gainsboro;
+    border-radius: 10px;
+    
+    margin:25px auto;
+    padding:25px;
+}
+
+div.slider {
+    background: linear-gradient(264deg, rgba(71,223,28,1) 0%, rgba(171,109,246,1) 50%, rgba(71,223,28,1) 100%);
+
+    border: 5px inset wheat;
+    border-radius:50px;
+
+    font-family: Arial, Helvetica, sans-serif;
+
+    overflow:hidden;
+}
+
+div.slider div.card{
+    background-color: white;
+
+    border: 10px dashed red;
+
+    box-shadow: 5px 5px 5px black;
+
+    -webkit-text-fill-color: black;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: greenyellow;
+}
+
+div.slider img{
+    border-bottom: 5px inset wheat;
+
+    overflow:hidden;
+}
+
+.modal{
+    border: 3px outset orange;
+    
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+div.icon-block{
+    background-color: white;
+
+    border: 5px outset black;
+    border-radius: 20px;
+
+    min-height:600px;
+
+    margin:10px;
+    padding:10px;
+}
+
+div.icon-block:hover{
+    background-color: palegoldenrod;
+    
+    -webkit-text-fill-color: black;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: orangered;
+}
+
+div.icon-block i{
+    font-size:70px;
+}
+
+#form-users-search, #table-users {
+    background-color: white;
+
+    border:3px solid black;
+}
