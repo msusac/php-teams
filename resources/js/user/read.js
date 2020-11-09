@@ -1,3 +1,4 @@
+//Function for showing user details
 function readUser(username) {
 
     //Process form
@@ -17,6 +18,7 @@ function readUser(username) {
                 $('#modal-user-read tbody').html(data.table);
 
                 //Open modal
+                $('#modal-user-read').modal('close');
                 $('#modal-user-read').modal('open');
             }
             else {
@@ -30,4 +32,4 @@ function readUser(username) {
         .fail(function (data) {
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
-}
+};

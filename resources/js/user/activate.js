@@ -1,3 +1,4 @@
+//Function for activating user
 function activateUser(username) {
 
     //Process form
@@ -15,6 +16,13 @@ function activateUser(username) {
             if (data.success) {
                 M.toast({ html: data.message, classes: 'green rounded' });
                 readUser(username);
+
+                //Refresh users table if it exists
+                if($('#table-users').length){
+                    var formData = $('#form-users-search').serialize();
+                    searchUsersTable(formData);
+                    readUser(username);
+                }
             }
         })
         //Fail promise callback
@@ -24,6 +32,7 @@ function activateUser(username) {
         });
 }
 
+//Function for showing user details
 function readUser(username) {
 
     //Process form
@@ -55,6 +64,37 @@ function readUser(username) {
         })
         //Fail promise callback
         .fail(function (data) {
+            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
+        });
+};
+
+//Function for searching and displaying users table
+function searchUsersTable(formData) {
+    $.ajax({
+        type: "POST",
+        url: "/php-teams/users/search/process.php",
+        data: formData,
+        dataType: "json",
+        encode: true,
+    })
+        //Done promise callback
+        .done(function (data) {
+            //Show validation errors
+            if (!data.success) {
+                if (data.errors.sql) {
+                    //Show sql error message
+                    console.log(data.errors.sql);
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
+                }
+            }
+            else {
+                //Show data table
+                $("#table-users tbody").html(data.table);
+            }
+        })
+        //Fail promise callback
+        .fail(function (data) {
+            //Server failed to respond - show error message
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 }

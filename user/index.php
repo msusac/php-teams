@@ -68,5 +68,5 @@ if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
         <?php include(APP_ROOT . 'templates/footer.php') ?>
     </main>
 
-    <script src="/php-teams/resources/js/users/search.js"></script>
+    <script type="text/javascript" src="/php-teams/resources/js/user/search.js"></script>
 </body>

@@ -10,7 +10,7 @@
                                 <li><a class="waves-effect" href="#">Tasks</a></li>
                                 <li><a class="waves-effect" href="#">Requests</a></li>';
                     if ($_SESSION['$user_role'] == 'ROLE_ADMIN') {
-                        echo '<li><a class="waves-effect" href="/php-teams/users">Users</a></li>';
+                        echo '<li><a class="waves-effect" href="/php-teams/user">Users</a></li>';
                     }
                 }
                 ?>
@@ -42,7 +42,7 @@
             <li><div class="divider"></div></li>';
 
             if ($_SESSION['$user_role'] == 'ROLE_ADMIN') {
-                echo '<li><a class="waves-effect" href="/php-teams/users"><i class="material-icons">group</i> Users</a></li>
+                echo '<li><a class="waves-effect" href="/php-teams/user"><i class="material-icons">group</i> Users</a></li>
                 <li><div class="divider"></div></li>';
             }
         }
@@ -70,12 +70,12 @@
 
     <!-- User Read Modal -->
     <?php include(APP_ROOT . 'user/read/modal.php') ?>
-    <script src="/php-teams/resources/js/user/read.js"></script>
-    <script src="/php-teams/resources/js/user/activate.js"></script>
+    <script type="text/javascript" src="/php-teams/resources/js/user/activate.js"></script>
+    <script type="text/javascript" src="/php-teams/resources/js/user/read.js"></script>
 
     <!-- User Edit Modal -->
     <?php include(APP_ROOT . 'user/edit/modal.php') ?>
-    <script src="/php-teams/resources/js/user/edit.js"></script>
+    <script type="text/javascript" src="/php-teams/resources/js/user/edit.js"></script>
 
     <!-- Registration Form Modal -->
     <?php include(APP_ROOT . 'user/register/modal.php') ?>

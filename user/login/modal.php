@@ -24,4 +24,4 @@
     </div>
 </div>
 
-<script src="/php-teams/resources/js/user/login.js"></script>
+<script type="text/javascript" src="/php-teams/resources/js/user/login.js"></script>

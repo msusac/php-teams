@@ -36,4 +36,4 @@
         </div>
     </div>
 </div>
-<script src="/php-teams/resources/js/user/register.js"></script>
+<script type="text/javascript" src="/php-teams/resources/js/user/register.js"></script>
