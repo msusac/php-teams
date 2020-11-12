@@ -12,4 +12,4 @@
     </div>
 </div>
 
-<script type="text/javascript" src="/php-teams/resources/js/user/logout.js"></script>
+<script type="module" src="/php-teams/resources/js/user/logout.js"></script>

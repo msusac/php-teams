@@ -1,5 +1,6 @@
 <?php
 //Start session
+ob_start();
 session_start();
 
 //Check if access is from AJAX/JS Scripts
@@ -12,20 +13,20 @@ include('../../config/db_connect.php');
 $errors = array();
 $data = array();
 
-//Check user role
-if(isset($_SESSION['$user'])){
-    if($_SESSION['$user_role'] == 'ROLE_ADMIN'){
-        //Check user before activation
-        $username = prepare_field($_POST['username']);
-        check_user(prepare_field($username));
-    }
-    else{
-        $errors['session'] = 'Unauthorized access!';
-    }
-}
-else{
+//Check user access
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$user_role'] != 'ROLE_ADMIN'){
     $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
 }
+
+//Check user before activation
+$username = prepare_field($_POST['username']);
+check_user(prepare_field($username));
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -54,7 +55,7 @@ function activate_user($id){
     //Query to insert user authority
     $query = "INSERT INTO user_authority_table (user_id, authority_id) VALUES ($id, 2)";
 
-    //Execute query
+    //Execute query, print error if query is unsuccessfull
     if (!$result = mysqli_query($connection, $query)) {
         $errors['sql'] = mysqli_error($connection);
     }
@@ -83,7 +84,7 @@ function check_user($username){
         //Check if row is empty or not
         if(!empty($row)){
 
-            //Check if user has role
+            //Check if user has role before activation
             if(empty($row['role'])){
                 activate_user($row['userId']);
             }
@@ -103,4 +104,3 @@ function check_user($username){
 //Close connection
 mysqli_close($connection);
 ?>
-

@@ -114,8 +114,16 @@ div.icon-block i{
     font-size:70px;
 }
 
-#form-users-search, #table-users {
+#form-users-search, #table-users, #form-projects-search,
+#table-projects{
     background-color: white;
 
     border:3px solid black;
+}
+
+img.circle {
+    background-size: cover;
+
+    width:250px;
+    height:250px;
 }

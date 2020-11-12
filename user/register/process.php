@@ -1,4 +1,8 @@
 <?php
+//Start session
+ob_start();
+session_start();
+
 //Check if access is from AJAX/JS Scripts
 include('../../config/ajax_connect.php');
 
@@ -8,6 +12,17 @@ include('../../config/db_connect.php');
 //Initialize data and error arrays
 $errors = array();
 $data = array();
+
+//Check user access
+if(isset($_SESSION['$user']) || !empty($_SESSION['$user'])){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
+}
 
 //Prepare fields
 $username = prepare_field($_POST['username']);
@@ -109,9 +124,7 @@ function prepare_field_email($field)
 function save_user($username, $email, $password)
 {
     global $connection;
-
-    //Statement initialization
-    $stmt = mysqli_stmt_init($connection);
+    global $errors;
 
     //Query for inserting user
     $query = "INSERT INTO user_table (username, email, password) VALUES ('$username', '$email', '$password')";
@@ -139,7 +152,7 @@ function validate_form($username, $email, $password, $password_repeat)
         check_username($username);
     
     if (empty($email))
-        $errors['email'] = 'E-maik address is required.';
+        $errors['email'] = 'E-mail address is required.';
     else if (!filter_var($email, FILTER_VALIDATE_EMAIL))
         $errors['email'] = 'E-mail address must be valid.';
     else

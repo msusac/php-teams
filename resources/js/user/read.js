@@ -1,6 +1,8 @@
 //Function for showing user details
-function readUser(username) {
+export function readUser(username) {
 
+    console.log(username);
+    
     //Process form
     $.ajax({
         type: "POST",
@@ -18,18 +20,27 @@ function readUser(username) {
                 $('#modal-user-read tbody').html(data.table);
 
                 //Open modal
-                $('#modal-user-read').modal('close');
-                $('#modal-user-read').modal('open');
+                if(!$('#modal-user-read').hasClass('open')){
+                    $('#modal-user-read').modal('open');
+                }
             }
+            //Show validation errors
             else {
+                //Show sql error message
                 if (data.errors.sql) {
-                    //Show sql error message
                     M.toast({ html: data.errors.sql, classes: 'red rounded' });
+                }
+                //Show session error message
+                if (data.errors.session) {
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
                 }
             }
         })
         //Fail promise callback
         .fail(function (data) {
+            console.log(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 };
+
+window.readUser = readUser;

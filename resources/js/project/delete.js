@@ -1,19 +1,20 @@
-$(document).ready(function () {
+import { searchProjectsTable } from './search.js';
 
-    //Call the action on form submit
-    $('#form-user-logout').on('submit',function (event) {
+//Delete project
+function deleteProject() {
 
-        //Prevent form from refreshing page
-        event.preventDefault();
-
+    //Alert dialog
+    if (confirm("Do you want to delete? This will delete all task and requests related to this project?")) {
         //Serialize form data
-        var formData = '';
+        var id = $("#modal-project-read #projectHiddenId").val();
 
         //Process form
         $.ajax({
             type: "POST",
-            url: "/php-teams/user/logout/process.php",
-            data: formData,
+            url: "/php-teams/project/delete/process.php",
+            data: {
+                id: id
+            },
             dataType: "json",
             encode: true,
         })
@@ -23,8 +24,12 @@ $(document).ready(function () {
                     //Show success message
                     M.toast({ html: data.message, classes: 'green rounded' });
 
-                    //Refresh page
-                    location.reload();
+                    //Close project read modal
+                    $('#modal-project-read').modal('close');
+
+                    //Update table
+                    var formData = $('#form-projects-search').serialize();
+                    searchProjectsTable(formData);
                 }
             })
             //Fail promise callback
@@ -33,5 +38,7 @@ $(document).ready(function () {
                 console.log(data);
                 M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
             });
-    });
-});
+    }
+}
+
+window.deleteProject = deleteProject;

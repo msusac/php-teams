@@ -1,4 +1,5 @@
 <?php
+//Start session
 ob_start();
 session_start();
 

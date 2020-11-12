@@ -1,9 +1,25 @@
 <?php
+//Start session
+ob_start();
+session_start();
+
 //Check if access is from AJAX/JS Scripts
 include('../../config/ajax_connect.php');
 
 //Check connection with database
 include('../../config/db_connect.php');
+
+//Check user access
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo($_SESSION['$user']);
+    echo json_encode($data);
+    exit();
+}
 
 //Initialize data and error arrays
 $errors = array();
@@ -21,7 +37,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Successfully reterieved user!';
+    $data['message'] = 'Successfully retrieved user!';
 }
 
 //Return all data to an AJAX call
@@ -34,11 +50,11 @@ function get_user_by_username($username)
     global $data;
     global $errors;
 
-    //Initializing HTML table
+    //Initializing HTML table As Json Data
     $data['table'] = '';
 
     //Query that check if user exists in database
-    $query = "SELECT u.username AS username, u.fullname AS fullname, u.email AS email, u.created_at AS createdAt, 
+    $query = "SELECT u.username AS username, u.fullname AS fullname, u.email AS email, u.date_created AS dateCreated, 
               a.name AS role 
               FROM user_table u 
               LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 
@@ -88,7 +104,7 @@ function get_user_by_username($username)
             $data['table'] .=
                 '<tr>
                     <td><b>Joined at</b></td>
-                    <td><i>' . $row['createdAt'] . '</i></td>
+                    <td><i>' . $row['dateCreated'] . '</i></td>
                 </tr>';
 
             //Role
@@ -116,13 +132,12 @@ function get_user_by_username($username)
             $data['table'] .= '<tr><td><b>Actions</b></td><td>';
 
             //Check if profile belogns to logged user
-            session_start();
             if ($_SESSION['$user'] == $row['username'])
-                $data['table'] .='<a class="modal-action waves-effect btn brand" href="#" onclick="openEditUserModal()">Edit</a>';
+                $data['table'] .='<a class="modal-action waves-effect btn brand blue" href="#" onclick="editUser()">Edit</a>';
 
             //Add button for activating user
             if ($_SESSION['$user_role'] == 'ROLE_ADMIN' && empty($row['role'])){
-                $data['table'] .='<a class="modal-action waves-effect btn brand" href="#" onclick="activateUser(\'' . $row['username'] . '\')">Activate</a>';
+                $data['table'] .='<a class="modal-action waves-effect btn brand green" href="#" onclick="activateUser(\'' . $row['username'] . '\')">Activate</a>';
             }
             
 

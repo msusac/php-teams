@@ -1,6 +1,18 @@
 <?php
 //Start session
+ob_start();
 session_start();
+
+//Check user access
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
+}
 
 //Check if access is from AJAX/JS Scripts
 include('../../config/ajax_connect.php');
@@ -18,7 +30,7 @@ $password_old = prepare_field($_POST['password_old']);
 $password_new = prepare_field($_POST['password_new']);
 $password_new_repeat = prepare_field($_POST['password_new_repeat']);
 
-//Check if user changed passwords or not
+//Validate form if user wants to change password
 if(!empty($password_new))
     validate_form($password_old, $password_new, $password_new_repeat);
 
@@ -28,7 +40,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } 
 else{
-    //Update user
+    //Check if user wants to change password
     if(!empty($password_new))
         update_user($fullname, md5($password_new));
     else
@@ -42,6 +54,7 @@ if (!empty($errors)) {
 }
 else {
     $data['success'] = true;
+    $data['user'] = $_SESSION['$user'];
     $data['message'] = 'User Details sucessfully changed!';
 }
 
@@ -66,7 +79,10 @@ function check_password($password_old)
     global $connection;
     global $errors;
 
+    //Get username from session;
     $username = $_SESSION['$user'];
+
+    //Encrypt password
     $password = md5($password_old);
 
     //Query that checks if user already exists in database

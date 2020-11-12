@@ -1,4 +1,5 @@
 <?php
+//Start session
 ob_start();
 session_start();
 
@@ -12,7 +13,7 @@ if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
 <html>
 
 <head>
-    <title>PHP Teams - Main Page</title>
+    <title>PHP Teams - Users</title>
 
     <?php include(APP_ROOT . 'templates/head.php') ?>
 </head>
@@ -45,8 +46,8 @@ if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
                             </select>
                         </div>
                         <div class="input-field col s3">
-                            <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Search</button>
-                            <a class="modal-action waves-effect btn brand" id="users-search-clear-btn">Clear</a>
+                            <button type="submit" name="submit" value="submit" class="waves-effect btn brand">Search</button>
+                            <a class="waves-effect btn brand" id="users-search-clear-btn">Clear</a>
                         </div>
                     </div>
                 </form>
@@ -68,5 +69,5 @@ if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
         <?php include(APP_ROOT . 'templates/footer.php') ?>
     </main>
 
-    <script type="text/javascript" src="/php-teams/resources/js/user/search.js"></script>
+    <script type="module" src="/php-teams/resources/js/user/search.js"></script>
 </body>

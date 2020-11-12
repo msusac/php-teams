@@ -1,4 +1,8 @@
 <?php
+//Start session
+ob_start();
+session_start();
+
 //Check if access is from AJAX/JS Scripts
 include('../../config/ajax_connect.php');
 
@@ -9,11 +13,23 @@ include('../../config/db_connect.php');
 $errors = array();
 $data = array();
 
+//Check user access
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$user_role'] != 'ROLE_ADMIN'){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
+}
+
 //Preparing fields
 $username = prepare_field($_POST['username']);
 $email = prepare_field($_POST['email']);
 $role = prepare_field($_POST['role']);
 
+//Function for searching users
 get_users_by_search($username, $email, $role);
 
 //Check if there are any errors
@@ -22,7 +38,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Registration sucessfull! Your account will be activated soon!';
+    $data['message'] = 'Search sucessfull!';
 }
 
 //Return all data to an AJAX call
@@ -58,8 +74,7 @@ function get_users_by_search($username, $email, $role){
     }
 
     //Query that check if user exists in database
-    $query = "SELECT u.username AS username, u.fullname AS fullname, u.email AS email, u.created_at AS createdAt, 
-              a.name AS role 
+    $query = "SELECT u.username AS username, u.email AS email, a.name AS role 
               FROM user_table u 
               LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 
               LEFT OUTER JOIN authority_table a ON a.id = ua.authority_id

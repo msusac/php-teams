@@ -28,9 +28,9 @@
                     </div>
                 </div>
                 <div class="row center-align">
-                    <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Edit</button>
-                    <a class="modal-action waves-effect btn brand" id="edit-user-clear-btn">Clear</a>
-                    <a class="modal-action modal-close waves-effect btn brand">Close</a>
+                    <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Save</button>
+                    <a class="modal-action waves-effect btn brand" id="user-edit-clear-btn">Reset</a>
+                    <a class="modal-action modal-close waves-effect btn brand" onclick="readUser(<?php echo '\'' . $_SESSION['$user'] . '\''; ?>)">Close</a>
                 </div>
             </form>
         </div>

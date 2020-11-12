@@ -1,12 +1,12 @@
 <header class="container">
     <nav>
         <div class="nav-wrapper">
-            <a href="/php-team" class="brand-logo center waves-effect">PHP-Teams</a>
+            <a href="/php-teams" class="brand-logo center waves-effect">PHP-Teams</a>
             <a href="#" class="sidenav-trigger waves-effect" data-target="sidenav-hide"><i class="material-icons">menu</i></a>
             <ul class="left hide-on-med-and-down">
                 <?php
                 if (isset($_SESSION['$user'])) {
-                    echo '<li><a class="waves-effect" href="#">Projects</a></li>
+                    echo '<li><a class="waves-effect" href="/php-teams/project">Projects</a></li>
                                 <li><a class="waves-effect" href="#">Tasks</a></li>
                                 <li><a class="waves-effect" href="#">Requests</a></li>';
                     if ($_SESSION['$user_role'] == 'ROLE_ADMIN') {
@@ -30,13 +30,13 @@
     </nav>
 
     <ul class="sidenav" id="sidenav-hide">
-        <li><a class="waves-effect" href="#">PHP-Teams</a></li>
+        <li><a class="waves-effect" href="/php-teams">PHP-Teams</a></li>
         <li>
             <div class="divider"></div>
         </li>
         <?php
         if (isset($_SESSION['$user'])) {
-            echo '<li><a class="waves-effect" href="#"><i class="material-icons">computer</i> Projects</a></li>
+            echo '<li><a class="waves-effect" href="/php-teams/project"><i class="material-icons">computer</i> Projects</a></li>
             <li><a class="waves-effect" href="#"><i class="material-icons">assignment</i> Tasks</a></li>
             <li><a class="waves-effect" href="#"><i class="material-icons">notifications</i> Requests</a></li>
             <li><div class="divider"></div></li>';
@@ -70,12 +70,12 @@
 
     <!-- User Read Modal -->
     <?php include(APP_ROOT . 'user/read/modal.php') ?>
-    <script type="text/javascript" src="/php-teams/resources/js/user/activate.js"></script>
-    <script type="text/javascript" src="/php-teams/resources/js/user/read.js"></script>
+    <script type="module" src="/php-teams/resources/js/user/activate.js"></script>
+    <script type="module" src="/php-teams/resources/js/user/read.js"></script>
 
     <!-- User Edit Modal -->
     <?php include(APP_ROOT . 'user/edit/modal.php') ?>
-    <script type="text/javascript" src="/php-teams/resources/js/user/edit.js"></script>
+    <script type="module" src="/php-teams/resources/js/user/edit.js"></script>
 
     <!-- Registration Form Modal -->
     <?php include(APP_ROOT . 'user/register/modal.php') ?>

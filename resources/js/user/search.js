@@ -1,20 +1,22 @@
 $(document).ready(function () {
 
-    //Show default results upon loading page
-    var formData = $('#form-users-search').serialize();
-    searchUsersTable(formData);
+    //Show default results upon loading page if users table is present
+    if ($('#table-users').length) {
+        var formData = $('#form-users-search').serialize();
+        searchUsersTable(formData);
+    }
 
     //Call the action on form submit
-    $('#form-users-search').submit(function (event) {
+    $('#form-users-search').on('submit', function (event) {
+
+        //Prevent form from refreshing page
+        event.preventDefault();
 
         //Serialize form data
         var formData = $(this).serialize();
 
         //Call function
         searchUsersTable(formData);
-
-        //Prevent form from refreshing page
-        event.preventDefault();
     });
 
     //Clear form and reset table on button click
@@ -29,7 +31,7 @@ $(document).ready(function () {
 });
 
 //Function for searching and displaying users table
-function searchUsersTable(formData) {
+export function searchUsersTable(formData) {
     $.ajax({
         type: "POST",
         url: "/php-teams/user/search/process.php",
@@ -40,21 +42,28 @@ function searchUsersTable(formData) {
         //Done promise callback
         .done(function (data) {
             //Show validation errors
-            if (!data.success) {
-                if (data.errors.sql) {
-                    //Show sql error message
-                    console.log(data.errors.sql);
-                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
-                }
-            }
-            else {
+            if (data.success) {
                 //Show data table
                 $("#table-users tbody").html(data.table);
+            }
+            //Show validation errors
+            else {
+                if (data.errors.sql) {
+                    //Show sql error message
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
+                }
+                if (data.errors.session) {
+                    //Show session error message
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
+                }
             }
         })
         //Fail promise callback
         .fail(function (data) {
             //Server failed to respond - show error message
+            console.log(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 }
+
+window.searchUsersTable = searchUsersTable;

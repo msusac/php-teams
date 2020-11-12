@@ -1,24 +1,24 @@
-import { readUser } from './read.js';
+import { readProject } from './read.js';
+import { searchProjectsTable } from './search.js';
 
 $(document).ready(function () {
 
     //Clear form on button click
-    $('#user-edit-clear-btn').on('click', function () {
+    $('#edit-project-clear-btn').on('click', function () {
+
+        //Serialize form data
+        var id = $("#modal-project-edit #projectHiddenId").val();
 
         //Clear validation messages
         clearMessages();
 
-        //Clear fields
-        clearFields();
-
-        //Serialize form data
-        var formData = '';
-
         //Process form
         $.ajax({
             type: "POST",
-            url: "/php-teams/user/edit/get.php",
-            data: formData,
+            url: "/php-teams/project/edit/get.php",
+            data: {
+                id: id
+            },
             dataType: "json",
             encode: true,
         })
@@ -26,7 +26,10 @@ $(document).ready(function () {
             .done(function (data) {
                 if (data.success) {
                     //Update form field
-                    $('#form-user-edit :input[name="fullname"]').val(data.fullname);
+                    $("#modal-project-edit #projectHiddenId").remove();
+                    $('#form-project-edit div').after(data.content);
+                    $('#form-project-edit :input[name="name"]').val(data.name);
+                    $('#form-project-edit #description').val(data.description);
                 }
             })
             //Fail promise callback
@@ -38,7 +41,7 @@ $(document).ready(function () {
     });
 
     //Call the action on form submit
-    $('#form-user-edit').on('submit', function (event) {
+    $('#form-project-edit').on('submit', function (event) {
 
         //Prevent form from refreshing page
         event.preventDefault();
@@ -47,41 +50,53 @@ $(document).ready(function () {
         clearMessages();
 
         //Serialize form data
-        var formData = $(this).serialize();
+        var formData = new FormData(this);
 
         //Process form
         $.ajax({
             type: "POST",
-            url: "/php-teams/user/edit/process.php",
+            url: "/php-teams/project/edit/process.php",
+            processData: false,
+            contentType: false,
+            cache: false,
+            processData: false,
             data: formData,
             dataType: "json",
-            encode: true,
         })
             //Done promise callback
             .done(function (data) {
                 if (data.success) {
-                    //Clear form fields
-                    clearFields();
-
-                    //Update User Read Modal
-                    readUser(data.user);
-
                     //Show toast message
                     M.toast({ html: data.message, classes: 'green rounded' });
+
+                    //Refresh projects table if only it is present
+                    if ($("#table-projects").length) {
+                        var formData = $('#form-projects-search').serialize();
+                        searchProjectsTable(formData);
+
+                        //Get hidden project id
+                        var id = $("#modal-project-edit #projectHiddenId").val();
+
+                        readProject(id);
+                    }
                 }
                 //Show validation errors
                 else {
-                    //Show old password error message
-                    if (data.errors.password_old) {
-                        $('#form-user-edit :input[name="password_old"]').after('<div class="red-text" id="text-error">' + data.errors.password_old + '</div>');
+                    //Show name error message
+                    if (data.errors.name) {
+                        $('#form-project-edit :input[name="name"]').after('<div class="red-text" id="text-error">' + data.errors.name + '</div>');
                     }
-                    //Show new password error message
-                    if (data.errors.password_new) {
-                        $('#form-user-edit :input[name="password_new"]').after('<div class="red-text" id="text-error">' + data.errors.password_new + '</div>');
+                    //Show description error message
+                    if (data.errors.description) {
+                        $('#form-project-edit #description').after('<div class="red-text" id="text-error">' + data.errors.description + '</div>');
                     }
-                    //Show repeat new password error message
-                    if (data.errors.password_new_repeat) {
-                        $('#form-user-edit :input[name="password_new_repeat]').after('<div class="red-text" id="text-error">' + data.errors.password_new_repeat + '</div>');
+                    //Show image error message
+                    if (data.errors.image) {
+                        M.toast({ html: data.errors.image, classes: 'red rounded' });
+                    }
+                    //Show sql error message
+                    if (data.errors.sql) {
+                        M.toast({ html: data.errors.sql, classes: 'red rounded' });
                     }
                 }
             })
@@ -93,7 +108,6 @@ $(document).ready(function () {
             });
     });
 
-
     //Clear messages
     function clearMessages() {
         $('#text-error').remove();
@@ -101,37 +115,35 @@ $(document).ready(function () {
         $('.green-text').remove();
         $('.red-text').remove();
     }
-
-    //Clear form fields
-    function clearFields() {
-        $('#form-user-edit :input[name="password_old"]').val('');
-        $('#form-user-edit :input[name="password_new"]').val('');
-        $('#form-user-edit :input[name="password_new_repeat"]').val('');
-    }
 });
 
-//Open edit user modal
-function editUser() {
+//Open edit project modal
+function editProject() {
 
-    //Serialize form data
-    var formData = '';
+    //Get hidden project id
+    var id = $("#modal-project-read #projectHiddenId").val();
 
     //Process form
     $.ajax({
         type: "POST",
-        url: "/php-teams/user/edit/get.php",
-        data: formData,
+        url: "/php-teams/project/edit/get.php",
+        data: {
+            id: id
+        },
         dataType: "json",
         encode: true,
     })
         //Done promise callback
         .done(function (data) {
             if (data.success) {
-                //Update field
-                $('#form-user-edit :input[name="fullname"]').val(data.fullname);
+                //Update field(s)
+                $("#modal-project-edit #projectHiddenId").remove();
+                $('#form-project-edit div').after(data.content);
+                $('#form-project-edit :input[name="name"]').val(data.name);
+                $('#form-project-edit #description').val(data.description);
 
                 //Open modal
-                $('#modal-user-edit').modal('open');
+                $('#modal-project-edit').modal('open');
             }
             //Show validation errors
             else {
@@ -153,4 +165,4 @@ function editUser() {
         });
 }
 
-window.editUser = editUser;
+window.editProject = editProject;

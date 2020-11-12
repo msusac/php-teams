@@ -1,4 +1,8 @@
 <?php
+//Start session
+ob_start();
+session_start();
+
 //Check if access is from AJAX/JS Scripts
 include('../../config/ajax_connect.php');
 
@@ -8,6 +12,17 @@ include('../../config/db_connect.php');
 //Initialize data and error arrays
 $errors = array();
 $data = array();
+
+//Check user access
+if(isset($_SESSION['$user']) || !empty($_SESSION['$user'])){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
+}
 
 //Prepare fields
 $username = prepare_field($_POST['username']);
@@ -62,9 +77,6 @@ function login_user($username, $password)
 
             //Check if user has role
             if(!empty($row['role'])){
-
-                //Session start
-                session_start();
 
                 $_SESSION['$user'] = $row['username'];
                 $_SESSION['$user_id'] = $row['userId'];

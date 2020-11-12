@@ -1,5 +1,6 @@
 <?php
 //Start session
+ob_start();
 session_start();
 
 //Check if access is from AJAX/JS Scripts
@@ -12,11 +13,19 @@ include('../../config/db_connect.php');
 $errors = array();
 $data = array();
 
-//Check request
-if (isset($_SESSION['$user']) && !empty($_SESSION['$user']))
-    get_user_fullname_by_username($_SESSION['$user']);
-else
-    $errors['session'] = "User does not exists";
+//Check user access
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
+    $errors['session'] = 'Unauthorized access!';
+
+    $data['success'] = false;
+    $data['errors']  = $errors;
+
+    echo json_encode($data);
+    exit();
+}
+
+//Get user
+get_user_fullname_by_username($_SESSION['$user']);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -36,14 +45,16 @@ function get_user_fullname_by_username($username)
     global $connection;
     global $data;
 
+    //Query to fetch user's fullname by username
     $query = "SELECT fullname FROM user_table
               WHERE username = '$username'";
 
-    //Fetch results
+    //Execute query
     $result = mysqli_query($connection, $query);
 
-    //Check row
+    //Check result
     if($result){
+        //Fetch row
         $row = mysqli_fetch_assoc($result);
         $data['fullname'] = $row['fullname'];
     }

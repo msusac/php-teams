@@ -1,15 +1,12 @@
-import { readUser } from './read.js';
-import { searchUsersTable } from './search.js';
-
-//Function for activating user
-function activateUser(username) {
+//Function for showing project details
+export function readProject(id) {
 
     //Process form
     $.ajax({
         type: "POST",
-        url: "/php-teams/user/activate/process.php",
+        url: "/php-teams/project/read/process.php",
         data: {
-            username: username
+            id: id
         },
         dataType: "json",
         encode: true,
@@ -17,22 +14,15 @@ function activateUser(username) {
         //Done promise callback
         .done(function (data) {
             if (data.success) {
-                //Show success message
-                M.toast({ html: data.message, classes: 'green rounded' });
+                //Show JSON data;
+                $('#modal-project-read .modal-content').html(data.content);
 
-                //Refresh user search table and modal only if user search table exists
-                if ($('#table-users').length) {
-
-                    //Serialize form data
-                    var formData = $('#form-users-search').serialize();
-
-                    //Read User Modal
-                    readUser(username);
-
-                    //Search Users Table
-                    searchUsersTable(formData);
+                //Open modal
+                if(!$('#modal-project-read').hasClass('open')){
+                    $('#modal-project-read').modal('open');
                 }
             }
+            //Show validation errors
             else {
                 //Show sql error message
                 if (data.errors.sql) {
@@ -46,10 +36,9 @@ function activateUser(username) {
         })
         //Fail promise callback
         .fail(function (data) {
-            //Server failed to respond - show error message
             console.log(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
-}
+};
 
-window.activateUser = activateUser;
+window.readProject = readProject;
