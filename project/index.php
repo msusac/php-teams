@@ -29,15 +29,15 @@ if (!isset($_SESSION['$user'])) {
             <div class="row">
                 <form class="col s12" method="POST" action="process.php" id="form-projects-search">
                     <div class="row center-align">
-                        <div class="input-field col s3">
+                        <div class="input-field col s4">
                             <label for="name">Name</label>
                             <input id="name" name="name" type="text" class="validate">
                         </div>
-                        <div class="input-field col s3">
+                        <div class="input-field col s4">
                             <label for="name">Creator</label>
                             <input id="creator" name="creator" type="text" class="validate">
                         </div>
-                        <div class="input-field col s3">
+                        <div class="input-field col s4">
                             <select name="date" id="date">
                                 <option value="" selected>Sort By</option>
                                 <option value="DATE_CREATED_ASC">Creation Date - Ascending</option>
@@ -46,7 +46,9 @@ if (!isset($_SESSION['$user'])) {
                                 <option value="DATE_UPDATED_DESC">Date Updated - Descending</option>
                             </select>
                         </div>
-                        <div class="input-field col s3">
+                    </div>
+                    <div class="row center-align">
+                        <div class="input-field col s12">
                             <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Search</button>
                             <a class="waves-effect btn brand" id="projects-search-clear-btn">Clear</a>
                             <a class="waves-effect btn brand modal-trigger" data-target="modal-project-add">Add</a>
@@ -55,14 +57,14 @@ if (!isset($_SESSION['$user'])) {
                 </form>
             </div>
             <div class="row">
-                <table id="table-projects" class="highlight responsive-table">
+                <table id="table-projects" class="highlight responsive-table centered">
                     <thead>
+                        <th>#</th>
                         <th>Name</th>
                         <th>Created By</th>
                         <th>Updated By</th>
                         <th>Created On</th>
                         <th>Updated On</th>
-                        <th></th>
                     </thead>
                     <tbody>
                     </tbody>

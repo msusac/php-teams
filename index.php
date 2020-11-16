@@ -45,7 +45,7 @@ define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
                             <img src="/php-teams/resources/img/task.jpg">
                             <div class="caption right-align card">
                                 <div class="card-content">
-                                    <h3 span="card-title">Menage your tasks!</h3>
+                                    <h3 span="card-title">Manage your tasks!</h3>
                                     <h5 class="light text-lighten-3"> Nullam tristique lobortis velit vel facilisis. Suspendisse ac tincidunt quam. Curabitur lobortis eleifend metus eu posuere. Proin id pellentesque sem.</h5>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@ define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
                                     <h5 class="light text-lighten-3">Etiam efficitur a mi non sagittis. Etiam eleifend id sapien et viverra. Ut vel ex gravida, egestas sem et, vestibulum nisl.</h5>
                                 </div>
                                 <?php
-                                    if(isset($_SESSION['$user'])){
+                                    if(!isset($_SESSION['$user'])){
                                         echo '<div class="card-action">
                                         <a class="modal-trigger waves-effect" href="#modal-register" data-target="modal-user-register">Register</a>
                                         <a class="modal-trigger waves-effect" href="#modal-login" data-target="modal-user-login">Login</a>

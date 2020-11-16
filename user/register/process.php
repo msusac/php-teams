@@ -33,16 +33,6 @@ $password_repeat = prepare_field($_POST['password_repeat']);
 //Validate form
 validate_form($username, $email, $password, $password_repeat);
 
-//Check if there are any errors before saving user
-if (!empty($errors)) {
-    $data['success'] = false;
-    $data['errors']  = $errors;
-} 
-else {
-    //Save user
-    save_user($username, $email, md5($password));
-}
-
 //Check if there are any errors
 if (!empty($errors)) {
     $data['success'] = false;
@@ -167,6 +157,12 @@ function validate_form($username, $email, $password, $password_repeat)
         $errors['password'] = 'Password must be letters, numbers and spaces.';
     else if ($password != $password_repeat)
         $errors['password'] = 'Both passwords must match!';
+
+    //Check errors
+    if(empty($errors)){
+        //Save user
+        save_user($username, $email, md5($password));
+    }
 }
 
 //Close connection

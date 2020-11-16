@@ -26,11 +26,12 @@ if(!isset($_SESSION['$user'])){
 
 //Preparing fields
 $name = prepare_field($_POST['name']);
-$creator = prepare_field($_POST['creator']);
-$date = prepare_field($_POST['date']);
+$projectId = prepare_field($_POST['project']);
+$status = prepare_field($_POST['status']);
+$date = prepare_field($_POST['date']); 
 
-//Function for searching projects
-get_projects_by_search($name, $creator, $date);
+//Function for searching tasks
+get_project_tasks_by_search($name, $projectId, $status, $date);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -47,11 +48,11 @@ echo json_encode($data);
 //Preparing fields for database without SQL Injection
 function prepare_field($field)
 {
-    return trim(preg_replace("/[;,<>&=%:'“]/i", "", $field));
+    return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
-//Function for searching projects
-function get_projects_by_search($name, $creator, $date){
+//Function for searching project tasks
+function get_project_tasks_by_search($name, $projectId, $status, $date){
 
     global $connection;
     global $data;
@@ -63,29 +64,49 @@ function get_projects_by_search($name, $creator, $date){
     //Initialize order by query
     $query_order_by = "";
 
+    //Initialize where project task status
+    $query_status_where = "";
+
+    //Initialize where project id
+    $query_project_id_where = "";
+
     //Check sort-by date
     if($date == 'DATE_CREATED_ASC'){
-        $query_order_by = "ORDER BY date_created ASC";
+        $query_order_by = "ORDER BY t.date_created ASC";
     }
     else if($date == 'DATE_CREATED_DESC'){
-        $query_order_by = "ORDER BY date_created DESC";
+        $query_order_by = "ORDER BY t.date_created DESC";
     }
     else if($date == 'DATE_UPDATED_ASC'){
-        $query_order_by = "ORDER BY date_updated ASC";
+        $query_order_by = "ORDER BY t.date_updated ASC";
     }
     else if($date == 'DATE_UPDATED_DESC'){
-        $query_order_by = "ORDER BY date_updated DESC";
+        $query_order_by = "ORDER BY t.date_updated DESC";
+    }
+
+    //Check project id
+    if(!empty($projectId)){
+        $query_project_id_where = "AND t.project_id = '$projectId'";
+    }
+
+    //Check project status
+    if(!empty($status)){
+        $query_status_where = "AND t.status = '$status'";
     }
 
     //Get user id
     $userId = $_SESSION['$user_id'];
     
     //Query that check if user exists in database
-    $query = "SELECT p.id AS id, p.name AS name, p.created_by AS createdBy, p.updated_by AS updatedBy,
-              p.date_created AS createdOn, p.date_updated AS updatedOn
-              FROM project_table p
+    $query = "SELECT t.id AS id, t.name AS task, t.status AS status,
+              t.date_created AS createdOn, t.date_updated AS updatedOn,
+              p.name AS project, p.id AS projectId
+              FROM task_table t
+              INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE p.name LIKE '%$name%' AND p.created_by LIKE '%$creator%' AND  up.user_id = '$userId'"
+              WHERE up.user_id = '$userId' AND t.name LIKE '%$name%'"
+              . $query_project_id_where
+              . $query_status_where
               . $query_order_by;
 
     //Execute query
@@ -97,24 +118,21 @@ function get_projects_by_search($name, $creator, $date){
         while($row = mysqli_fetch_assoc($result)){
 
             //Start table row
-            $data['table'] .= '<tr onclick="readProject(\'' . $row['id'] . '\')">';
+            $data['table'] .= '<tr onclick="readTask(\'' . $row['id'] . '\')">';
 
-            //Project id
+            //Task id
             $data['table'] .= '<td>' . $row['id'] . '</td>';
 
             //Project name
-            $data['table'] .= '<td>' . $row['name'] . '</td>';
+            $data['table'] .= '<td>' . $row['project'] . ' - ' . $row['projectId'] . '</td>';
 
-            //Created By
-            $data['table'] .= '<td>' . $row['createdBy'] . '</td>';
+            //Task name
+            $data['table'] .= '<td>' . $row['task'] . '</td>';
 
-            //Updated By
-            if(!empty($row['updatedBy'])){
-                $data['table'] .= '<td>' . $row['updatedBy'] . '</td>';
-            }
-            else{
-                $data['table'] .= '<td>None</td>';
-            }
+            //Task Status
+            $status = preg_replace("/_/i", " ", $row['status']);
+
+            $data['table'] .= '<td>' . $status . '</td>';
 
             //Created On
             $data['table'] .= '<td>' . $row['createdOn'] . '</td>';

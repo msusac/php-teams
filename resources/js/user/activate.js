@@ -31,6 +31,9 @@ function activateUser(username) {
 
                     //Search Users Table
                     searchUsersTable(formData);
+
+                    //Count not activated users
+                    countNotActivatedUsers();
                 }
             }
             else {

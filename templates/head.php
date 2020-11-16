@@ -14,3 +14,4 @@
 <script src="/php-teams/resources/js/other/select.js"></script>
 <script src="/php-teams/resources/js/other/sidenav.js"></script>
 <script src="/php-teams/resources/js/other/slider.js"></script>
+<script type="module" src="/php-teams/resources/js/other/header.js"></script>

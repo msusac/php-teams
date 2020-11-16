@@ -31,9 +31,6 @@ $password = prepare_field($_POST['password']);
 //Validate form
 validate_form($username, $password);
 
-//Login user
-login_user($username, md5($password));
-
 //Check if there are any errors
 if (!empty($errors)) {
     $data['success'] = false;
@@ -105,6 +102,12 @@ function validate_form($username, $password)
 
     if (empty($password))
         $errors['password'] = 'Password is required.';
+
+    //Check errors
+    if(empty($errors)){
+        //Login user
+        login_user($username, md5($password));
+    }
 }
 
 //Close connection

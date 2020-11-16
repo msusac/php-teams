@@ -25,11 +25,11 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
     exit();
 }
 
-//Project id
-$projectId = $_POST['id'];
+//Project task id
+$taskId = $_POST['id'];
 
-//Check request
-check_project_access($projectId);
+//Function to check if user has access to this project task
+check_project_task_access($taskId);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -43,8 +43,8 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project
-function check_project_access($projectId){
+//Function to check if user has access to this project task
+function check_project_task_access($taskId){
 
     global $connection;
     global $data;
@@ -56,12 +56,14 @@ function check_project_access($projectId){
     //Get user id
     $userId = $_SESSION['$user_id'];
 
-    //Query that check if user exists in database
-    $query = "SELECT p.id AS id, p.name AS name, p.image As image, p.description AS description
-              FROM project_table p
+    //Query to get project task
+    $query = "SELECT t.id AS id, t.name AS name, p.name AS project, p.id AS projectId,
+              t.status AS status, t.description AS description
+              FROM task_table t
+              INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE p.id = '$projectId' AND up.user_id = '$userId' AND up.role = 'CREATOR'";
-    
+              WHERE up.user_id = '$userId' AND t.id = '$taskId'";
+
     //Execute query
     $result = mysqli_query($connection, $query);
 
@@ -71,21 +73,23 @@ function check_project_access($projectId){
 
         //Check if row is empty or not
         if(!empty($row)){
+            //Hidden Project Task Id
+            $data['content'] .= '<input type="hidden" id="taskHiddenId" name="taskHiddenId" value="'.$row['id'].'">';
 
-            //Hidden Project Id
-            $data['content'] .= '<input type="hidden" id="projectHiddenId" name="projectHiddenId" value="'.$row['id'].'">';
-
-            //Project name
+            //Project task name
             $data['name'] = $row['name'];
+
+            //Project
+            $data['project'] = $row['project'] . ' - ' . $row['projectId'];
+
+            //Project task status
+            $data['status'] = preg_replace("/_/i", " ", $row['status']);
 
             //Description
             $data['description'] = $row['description'];
-
-            //Image
-            $data['image'] = $row['image'];
         }
         else{
-            $errors['sql'] = 'Project not found or user has no given access to this project.';
+            $errors['sql'] = "Project task not found or user has no access to it!";
         }
     }
     else{

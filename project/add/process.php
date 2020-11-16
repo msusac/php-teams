@@ -24,26 +24,13 @@ if(!isset($_SESSION['$user'])){
     exit();
 }
 
+//Prepare fields
 $name = prepare_field($_POST['name']);
 $description = prepare_field($_POST['description']);
 $image = $_FILES['image']['name'];
 
 //Validate from
-validate_form($name, $description);
-
-//Check if there are any errors before saving project
-if (!empty($errors)) {
-    $data['success'] = false;
-    $data['errors']  = $errors;
-} else {
-    //Check if image is uploaded
-    if(!empty($image)){
-        save_project_image($name, $description, $image);
-    }
-    else{
-        save_project($name, $description);
-    }
-}
+validate_form($name, $description, $image);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -79,7 +66,7 @@ function add_creator_to_project(){
     $query = "SELECT id, name FROM project_table 
               WHERE created_by = '$user' 
               ORDER BY date_created DESC
-              LIMIT 0,1;";
+              LIMIT 0,1";
 
     //Execute query
     $result = mysqli_query($connection, $query);
@@ -164,7 +151,7 @@ function save_project_image($name, $description, $image)
 }
 
 //Validate form
-function validate_form($name, $description)
+function validate_form($name, $description, $image)
 {
     global $errors;
 
@@ -176,7 +163,18 @@ function validate_form($name, $description)
     if (empty($description))
         $errors['description'] = "Project description is required.";
     else if (strlen($description) < 5 || strlen($description) > 550)
-        $errors['description'] = "Description must be between 5 and 550 characters";
+        $errors['description'] = "Description must be between 5 and 550 characters.";
+
+    //Check errors
+    if(empty($errors)){
+        //Check if user wants to save image or not
+        if(!empty($image)){
+            save_project_image($name, $description, $image);
+        }
+        else{
+            save_project($name, $description);
+        }
+    }
 }
 
 //Close connection

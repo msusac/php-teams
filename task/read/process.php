@@ -25,11 +25,11 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
 $errors = array();
 $data = array();
 
-//Project id
-$projectId = $_POST['id'];
+//Task id
+$taskId = $_POST['id'];
 
 //Check request
-check_project_access($projectId);
+check_project_access($taskId);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -44,7 +44,7 @@ if (!empty($errors)) {
 echo json_encode($data);
 
 //Function for checking user acess to this project
-function check_project_access($projectId){
+function check_project_access($taskId){
 
     global $connection;
     global $data;
@@ -57,12 +57,14 @@ function check_project_access($projectId){
     $userId = $_SESSION['$user_id'];
 
     //Query that check if user exists in database
-    $query = "SELECT p.id AS id, p.name AS name, p.created_by AS createdBy, p.updated_by AS updatedBy,
-              p.date_created AS createdOn, p.date_updated AS updatedOn, p.image As image, 
-              p.description AS description, up.role AS role
-              FROM project_table p
+    $query = "SELECT t.id AS id, t.name AS name, 
+              t.description AS description, t.status AS status,
+              t.created_by AS createdBy, t.updated_by AS updatedBy,
+              t.date_created AS createdOn, t.date_updated AS updatedOn
+              FROM task_table t
+              INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE p.id = '$projectId' AND up.user_id = '$userId'";
+              WHERE t.id = '$taskId' AND up.user_id = '$userId'";
     
     //Execute query
     $result = mysqli_query($connection, $query);
@@ -75,22 +77,23 @@ function check_project_access($projectId){
         if(!empty($row)){
 
             //Hidden Project Id
-            $data['content'] .= '<input type="hidden" id="projectHiddenId" name="projectHiddenId" value="'.$row['id'].'">';
+            $data['content'] .= '<input type="hidden" id="taskHiddenId" name="taskHiddenId" value="'.$row['id'].'">';
 
-            //Project Name
+            //Task Name
             $data['content'] .= '<div class="row"><div class="col s12 center-align"><h4>'.$row['name'].' '.'#'.$row['id'].'</h4></div></div>';
-
-            //Image
-            if(!empty($row['image'])){
-                $data['content'] .= '<div class = "card-panel center-align">
-                    <img src = "/php-teams/resources/img/uploads/'. $row['image'].'" class = "circle responsive-img">		 
-                </div>';
-            }
 
             //Description
             $data['content'] .= '<div class="row card-panel">
                 <b>Description</b>
                 <p>'.nl2br($row['description']).'</p>
+            </div>';
+
+            $status = preg_replace("/_/i", " ", $row['status']);
+
+            //Status
+            $data['content'] .= '<div class="row">
+                <div class="col s4 right-align"><p><b>Status</b></p></div>
+                <div class="col s8 left-align"><p><i>'. $status . '</i></p></div>
             </div>';
 
             //Created By
@@ -121,71 +124,18 @@ function check_project_access($projectId){
                 </div>';
             }
 
-            //Get project members
-            get_project_members($projectId);
-
-            //Add edit and delete button if user if creator of project
-            if($row['role'] == 'CREATOR'){
-                $data['content'] .= '<div class="row center-align">
-                    <a class="modal-action waves-effect btn brand blue" onclick="editProject()">Edit</a>
-                    <a class="modal-action waves-effect btn brand red" onclick="deleteProject()">Delete</a>
-                </div>';
-            }
-
+            //Add buttons
+            $data['content'] .= '<div class="row center-align">
+                <a class="modal-action waves-effect btn brand blue" onclick="editTask()">Edit</a>
+                <a class="modal-action waves-effect btn brand red" onclick="deleteTask()">Delete</a>
+            </div>';
+            
             //Add close button
             $data['content'] .= '<div class="row center-align"><a class="modal-action modal-close waves-effect btn brand">Close</a></div>';
         }
         else{
             $errors['sql'] = 'Project not found or user has no given access to this project.';
         }
-    }
-    else{
-        $errors['sql'] = mysqli_error($connection);
-    }
-}
-
-//Function to get project members
-function get_project_members($projectId){
-
-    global $connection;
-    global $data;
-    global $errors;
-
-    //Query that check if user exists in database
-    $query = "SELECT user_id AS id, user, role FROM user_project_table
-              WHERE project_id = '$projectId'
-              ORDER BY user ASC, role ASC";
-    
-    //Execute query
-    $result = mysqli_query($connection, $query);
-
-    //Check result
-    if($result){
-        //Start table
-        $data['content'] .= '<div class="row center-align">
-            <table class="highlight">
-                <tr>
-                    <th>User</th>
-                    <th>Role</th>
-                </tr>';
-
-        while($row = mysqli_fetch_assoc($result)){
-
-            //Start table row
-            $data['content'] .= '<tr style="cursor:pointer" onclick="readUser(\'' . $row['user'] . '\')">';
-
-            //User
-            $data['content'] .= '<td>' . $row['user'] . '</td>';
-
-            //Role
-            $data['content'] .= '<td>' . $row['role'] . '</td>';
-
-            //Start end table row
-            $data['content'] .= '</tr>';
-        }
-        
-        //End table
-        $data['content'] .= '</table></div>';
     }
     else{
         $errors['sql'] = mysqli_error($connection);

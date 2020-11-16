@@ -5,12 +5,13 @@ body{
 header nav, footer{
     background: linear-gradient(110deg, rgba(246,208,109,1) 0%, rgba(223,156,28,1) 35%, rgba(161,72,4,1) 100%);
 
-    border: 1px outset black;
+    border: 5px inset wheat;
+    border-radius:5px;
     
     margin:10px;
+    min-height:75px;
 
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-
 }
 
 header nav ul li a, ul.sidenav li a{
@@ -115,10 +116,14 @@ div.icon-block i{
 }
 
 #form-users-search, #table-users, #form-projects-search,
-#table-projects{
+#table-projects, #form-tasks-search, #table-tasks {
     background-color: white;
 
     border:3px solid black;
+}
+
+#table-users tbody tr, #table-projects tbody tr, #table-tasks tbody tr{
+    cursor: pointer;
 }
 
 img.circle {

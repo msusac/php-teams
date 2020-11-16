@@ -20,10 +20,11 @@ $(document).ready(function () {
     });
 
     //Clear form and reset table on button click
-    $('#users-search-clear-btn').click(function () {
+    $('#users-search-clear-btn').on('click', function () {
         $('#form-users-search :input[name="username"]').val('');
         $('#form-users-search :input[name="email"]').val('');
-        $('#form-users-search select').val('');
+        $("#form-users-search select").prop("selectedIndex", 0);
+        $("#form-users-search select").formSelect();
 
         var formData = $('#form-users-search').serialize();
         searchUsersTable(formData);

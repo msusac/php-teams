@@ -24,18 +24,11 @@ if(!isset($_SESSION['$user'])){
     exit();
 }
 
+//Project id
 $projectId = $_POST['id'];
 
 //Check request
 check_project_access($projectId);
-
-//Check if there are any errors
-if (!empty($errors)) {
-    $data['success'] = false;
-    $data['errors']  = $errors;
-} else {
-    delete_user_project($projectId);
-}
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -71,30 +64,15 @@ function check_project_access($projectId){
         $row = mysqli_fetch_assoc($result);
 
         //Check if row is empty or not
-        if(empty($row))
+        if(!empty($row)){
+            delete_project($projectId);
+        }
+        else{
             $errors['sql'] = 'Project not found or user has no given access to this project.';
+        }
     }
     else{
         $errors['sql'] = mysqli_error($connection);
-    }
-}
-
-//Delete all project members
-function delete_user_project($projectId){
-
-    global $connection;
-    global $errors;
-
-    //Query that check if user exists in database
-    $query = "DELETE FROM user_project_table
-              WHERE project_id = '$projectId'";
-
-    //Execute query
-    if(!$result = mysqli_query($connection, $query)){
-        $errors['sql'] = mysqli_error($connection);
-    }
-    else{
-        delete_project($projectId);
     }
 }
 

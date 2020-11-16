@@ -4,7 +4,7 @@ import { searchProjectsTable } from './search.js';
 $(document).ready(function () {
 
     //Clear form on button click
-    $('#edit-project-clear-btn').on('click', function () {
+    $('#project-edit-clear-btn').on('click', function () {
 
         //Serialize form data
         var id = $("#modal-project-edit #projectHiddenId").val();

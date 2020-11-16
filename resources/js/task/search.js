@@ -1,13 +1,13 @@
 $(document).ready(function () {
 
-    //Show default results upon loading page if projects table is present
-    if ($('#table-projects').length) {
-        var formData = $('#form-projects-search').serialize();
-        searchProjectsTable(formData);
+    //Show default results upon loading page if project tasks table is present
+    if ($('#table-tasks').length) {
+        var formData = $('#form-tasks-search').serialize();
+        searchTasksTable(formData);
     }
 
     //Call the action on form submit
-    $('#form-projects-search').on('submit', function (event) {
+    $('#form-tasks-search').on('submit', function (event) {
 
         //Prevent form from refreshing page
         event.preventDefault();
@@ -16,26 +16,26 @@ $(document).ready(function () {
         var formData = $(this).serialize();
 
         //Call function
-        searchProjectsTable(formData);
+        searchTasksTable(formData);
     });
 
     //Clear form and reset table on button click
-    $('#projects-search-clear-btn').on('click', function () {
-        $('#form-projects-search :input[name="name"]').val('');
-        $('#form-projects-search :input[name="creator"]').val('');
-        $("#form-projects-search select").prop("selectedIndex", 0);
-        $("#form-projects-search select").formSelect();
+    $('#tasks-search-clear-btn').on('click', function () {
+        $('#form-tasks-search :input[name="name"]').val('');
 
-        var formData = $('#form-projects-search').serialize();
-        searchProjectsTable(formData);
+        $('#form-tasks-search select').prop('selectedIndex', 0);
+        $('#form-tasks-search select').formSelect();
+
+        var formData = $('#form-tasks-search').serialize();
+        searchTasksTable(formData);
     });
 });
 
-//Function for searching and displaying projects table
-export function searchProjectsTable(formData) {
+//Function for searching and displaying project tasks table
+export function searchTasksTable(formData) {
     $.ajax({
         type: "POST",
-        url: "/php-teams/project/search/process.php",
+        url: "/php-teams/task/search/process.php",
         data: formData,
         dataType: "json",
         encode: true,
@@ -44,7 +44,7 @@ export function searchProjectsTable(formData) {
         .done(function (data) {
             if (data.success) {
                 //Show data table
-                $("#table-projects tbody").html(data.table);
+                $("#table-tasks tbody").html(data.table);
             }
              //Show validation errors
             else {
@@ -62,4 +62,4 @@ export function searchProjectsTable(formData) {
         });
 }
 
-window.searchProjectsTable = searchProjectsTable;
+window.searchTasksTable = searchTasksTable;

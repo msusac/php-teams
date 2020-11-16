@@ -1,12 +1,12 @@
-//Function for showing user details
-export function readUser(username) {
+//Function for showing task details
+export function readTask(id) {
 
     //Process form
     $.ajax({
         type: "POST",
-        url: "/php-teams/user/read/process.php",
+        url: "/php-teams/task/read/process.php",
         data: {
-            username: username
+            id: id
         },
         dataType: "json",
         encode: true,
@@ -15,11 +15,11 @@ export function readUser(username) {
         .done(function (data) {
             if (data.success) {
                 //Show JSON data;
-                $('#modal-user-read tbody').html(data.table);
+                $('#modal-task-read .modal-content').html(data.content);
 
                 //Open modal
-                if(!$('#modal-user-read').hasClass('open')){
-                    $('#modal-user-read').modal('open');
+                if(!$('#modal-task-read').hasClass('open')){
+                    $('#modal-task-read').modal('open');
                 }
             }
             //Show validation errors
@@ -41,4 +41,4 @@ export function readUser(username) {
         });
 };
 
-window.readUser = readUser;
+window.readTask = readTask;

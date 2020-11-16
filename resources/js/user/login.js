@@ -64,17 +64,17 @@ $(document).ready(function () {
             });
     });
 
+    //Clear form fields
+    function clearFields() {
+        $('#form-user-login :input[name="username"]').val('');
+        $('#form-user-login :input[name="password"]').val('');
+    }
+
     //Clear messages
     function clearMessages() {
         $('#text-error').remove();
         $('#text-sucess').remove();
         $('.green-text').remove();
         $('.red-text').remove();
-    }
-
-    //Clear form fields
-    function clearFields() {
-        $('#form-user-login :input[name="username"]').val('');
-        $('#form-user-login :input[name="password"]').val('');
     }
 });

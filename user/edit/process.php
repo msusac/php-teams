@@ -30,21 +30,14 @@ $password_old = prepare_field($_POST['password_old']);
 $password_new = prepare_field($_POST['password_new']);
 $password_new_repeat = prepare_field($_POST['password_new_repeat']);
 
-//Validate form if user wants to change password
-if(!empty($password_new))
-    validate_form($password_old, $password_new, $password_new_repeat);
-
-//Check if there are any errors before updating user
-if (!empty($errors)) {
-    $data['success'] = false;
-    $data['errors']  = $errors;
-} 
+//Check if user wants to change password or not
+if(!empty($password_new)){
+    //Validate form
+    validate_form($fullname, $password_old, $password_new, $password_new_repeat);
+}
 else{
-    //Check if user wants to change password
-    if(!empty($password_new))
-        update_user($fullname, md5($password_new));
-    else
-        update_user_only_fullname($fullname);
+    //Update only fullname
+    update_user_only_fullname($fullname);
 }
 
 //Check if there are any errors
@@ -134,7 +127,7 @@ function update_user($fullname, $password_new)
 }
 
 //Validate form
-function validate_form($password_old, $password_new, $password_new_repeat)
+function validate_form($fullname, $password_old, $password_new, $password_new_repeat)
 {
     global $errors;
 
@@ -151,6 +144,12 @@ function validate_form($password_old, $password_new, $password_new_repeat)
         $errors['password'] = 'New password must be letters, numbers and spaces.';
     else if ($password_new != $password_new_repeat)
         $errors['password_new'] = 'Both new passwords must match!';
+
+    //Check errors
+    if(empty($errors)){
+        //Update user
+        update_user($fullname, md5($password_new));
+    }
 }
 
 //Close connection

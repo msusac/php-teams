@@ -1,17 +1,17 @@
-import { searchProjectsTable } from './search.js';
+import { searchTasksTable } from './search.js';
 
-//Delete project
-function deleteProject() {
+//Delete task
+function deleteTask() {
 
     //Alert dialog
-    if (confirm("Do you want to delete this? This will delete all task and requests related to this project!")) {
+    if (confirm("Do you want to delete this project task?")) {
         //Serialize form data
-        var id = $("#modal-project-read #projectHiddenId").val();
+        var id = $("#modal-task-read #taskHiddenId").val();
 
         //Process form
         $.ajax({
             type: "POST",
-            url: "/php-teams/project/delete/process.php",
+            url: "/php-teams/task/delete/process.php",
             data: {
                 id: id
             },
@@ -24,12 +24,12 @@ function deleteProject() {
                     //Show success message
                     M.toast({ html: data.message, classes: 'green rounded' });
 
-                    //Close project read modal
-                    $('#modal-project-read').modal('close');
+                    //Close task read modal
+                    $('#modal-task-read').modal('close');
 
                     //Update table
-                    var formData = $('#form-projects-search').serialize();
-                    searchProjectsTable(formData);
+                    var formData = $('#form-tasks-search').serialize();
+                    searchTasksTable(formData);
                 }
             })
             //Fail promise callback
@@ -41,4 +41,4 @@ function deleteProject() {
     }
 }
 
-window.deleteProject = deleteProject;
+window.deleteTask = deleteTask;

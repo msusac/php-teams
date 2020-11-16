@@ -90,7 +90,7 @@ function get_users_by_search($username, $email, $role){
         while($row = mysqli_fetch_assoc($result)){
 
             //Start table row
-            $data['table'] .= '<tr>';
+            $data['table'] .= '<tr onclick="readUser(\'' . $row['username'] . '\')">';
 
             //Username
             $data['table'] .= '<td>' . $row['username'] . '</td>';
@@ -106,9 +106,6 @@ function get_users_by_search($username, $email, $role){
             } else {
                 $data['table'] .= '<td>Not Activated</td>';
             }
-
-            //Add read button
-            $data['table'] .= '<td><a class="modal-action waves-effect btn brand" href="#" onclick="readUser(\'' . $row['username'] . '\')">Read</a></td>';
 
             //Start end table row
             $data['table'] .= '</tr>';

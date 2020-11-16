@@ -24,13 +24,12 @@ if(!isset($_SESSION['$user'])){
     exit();
 }
 
+//Prepare fields
 $name = prepare_field($_POST['name']);
 $description = prepare_field($_POST['description']);
-$image = $_FILES['image']['name'];
-$projectId = $_POST['projectHiddenId'];
+$projectId = prepare_field($_POST['project']);
 
-//Check request
-check_project_access($projectId, $name, $description, $image);
+validate_form($name, $description, $projectId);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -38,7 +37,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Successfully updated project!';
+    $data['message'] = 'Project Task sucessfully saved!';
 }
 
 //Return all data to an AJAX call
@@ -50,8 +49,8 @@ function prepare_field($field)
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
-//Function for checking user acess to this project
-function check_project_access($projectId, $name, $description, $image){
+//Function to check if user has access to this project
+function check_project_access($projectId){
 
     global $connection;
     global $errors;
@@ -62,7 +61,7 @@ function check_project_access($projectId, $name, $description, $image){
     //Query that check if user exists in database
     $query = "SELECT * FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE p.id = '$projectId' AND up.user_id = '$userId' AND up.role = 'CREATOR'";
+              WHERE p.id = '$projectId' AND up.user_id = '$userId'";
     
     //Execute query
     $result = mysqli_query($connection, $query);
@@ -72,20 +71,16 @@ function check_project_access($projectId, $name, $description, $image){
         $row = mysqli_fetch_assoc($result);
 
         //Check if row is empty or not
-        if(!empty($row)){
-            validate_form($projectId, $name, $description, $image);
-        }
-        else{
-            $errors['sql'] = 'Project not found or user has no given access to this project.';
-        }
+        if(empty($row))
+            $errors['project'] = 'Please select project that is associated with you!';
     }
     else{
         $errors['sql'] = mysqli_error($connection);
     }
 }
 
-//Update project without image
-function update_project($projectId, $name, $description){
+//Function save project task
+function save_project_task($name, $description, $projectId){
 
     global $connection;
     global $errors;
@@ -93,22 +88,21 @@ function update_project($projectId, $name, $description){
     //Get user
     $user = $_SESSION['$user'];
 
-    //Query for updating project
-    $query = "UPDATE project_table 
-              SET name = '$name', description = '$description', updated_by = '$user'
-              WHERE id = '$projectId'";
+    //Query for inserting project task
+    $query = "INSERT INTO task_table (name, description, status, created_by, project_id)
+              VALUES ('$name', '$description', 'NOT_STARTED', '$user', '$projectId')";
 
     //Check if there is any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
     }
     else{
-        update_user_project($projectId, $name);
+        update_project($projectId);
     }
 }
 
-//Update project with image
-function update_project_image($projectId, $name, $description, $image){
+//Function to update project
+function update_project($projectId){
 
     global $connection;
     global $errors;
@@ -116,41 +110,8 @@ function update_project_image($projectId, $name, $description, $image){
     //Get user
     $user = $_SESSION['$user'];
 
-    //Image file directory
-    define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
-
-    $target = APP_ROOT . "resources/img/uploads/" . basename($image);
-
-    //Upload image
-    if (!move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-        $errors['image'] = "Failed to upload image";
-    }
-    else{
-        //Query for updating project
-        $query = "UPDATE project_table 
-                SET name = '$name', description = '$description', updated_by = '$user', image = '$image'
-                WHERE id = '$projectId'";
-
-        //Check if there is any errors
-        if(!$result = mysqli_query($connection, $query)){
-            $errors['sql'] = mysqli_error($connection);
-        }
-        else{
-            update_user_project($projectId, $name);
-        }
-    }
-}
-
-//Function for updating user_project table
-function update_user_project($projectId, $name){
-    
-    global $connection;
-    global $errors;
-
     //Query for updating project
-    $query = "UPDATE user_project_table 
-        SET project = '$name'
-        WHERE project_id = '$projectId'";
+    $query = "UPDATE project_table SET updated_by = '$user' WHERE id = $projectId";
 
     //Check if there is any errors
     if(!$result = mysqli_query($connection, $query)){
@@ -159,7 +120,7 @@ function update_user_project($projectId, $name){
 }
 
 //Validate form
-function validate_form($projectId, $name, $description, $image)
+function validate_form($name, $description, $projectId)
 {
     global $errors;
 
@@ -173,15 +134,10 @@ function validate_form($projectId, $name, $description, $image)
     else if (strlen($description) < 5 || strlen($description) > 550)
         $errors['description'] = "Description must be between 5 and 550 characters";
 
-    //Check errors
+    check_project_access($projectId);
+
     if(empty($errors)){
-        //Check if user wants to change image or not
-        if(isset($_POST['save_image']) && !empty($image)){
-            update_project_image($projectId, $name, $description, $image);
-        }
-        else{
-            update_project($projectId, $name, $description);
-        }
+        save_project_task($name, $description, $projectId);
     }
 }
 
