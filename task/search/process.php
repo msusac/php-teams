@@ -28,10 +28,11 @@ if(!isset($_SESSION['$user'])){
 $name = prepare_field($_POST['name']);
 $projectId = prepare_field($_POST['project']);
 $status = prepare_field($_POST['status']);
-$date = prepare_field($_POST['date']); 
+$date = prepare_field($_POST['date']);
+$days = prepare_field($_POST['days']); 
 
 //Function for searching tasks
-get_project_tasks_by_search($name, $projectId, $status, $date);
+get_project_tasks_by_search($name, $projectId, $status, $date, $days);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -52,7 +53,7 @@ function prepare_field($field)
 }
 
 //Function for searching project tasks
-function get_project_tasks_by_search($name, $projectId, $status, $date){
+function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
 
     global $connection;
     global $data;
@@ -61,37 +62,68 @@ function get_project_tasks_by_search($name, $projectId, $status, $date){
     //Initializing HTML table
     $data['table'] = '';
 
-    //Initialize order by query
+    //Initialize order by query 
     $query_order_by = "";
 
+    //Initialize where days
+    $query_where_days = "";
+
     //Initialize where project task status
-    $query_status_where = "";
+    $query_where_status = "";
 
     //Initialize where project id
-    $query_project_id_where = "";
+    $query_where_project_id = "";
+
+    //Check sort-by date and days
+    if(!empty($date) || !empty($days)){
+        $query_order_by .= "ORDER BY ";
+    }
 
     //Check sort-by date
     if($date == 'DATE_CREATED_ASC'){
-        $query_order_by = "ORDER BY t.date_created ASC";
+        $query_order_by .= "t.date_created ASC ";
     }
     else if($date == 'DATE_CREATED_DESC'){
-        $query_order_by = "ORDER BY t.date_created DESC";
+        $query_order_by .= "t.date_created DESC ";
     }
     else if($date == 'DATE_UPDATED_ASC'){
-        $query_order_by = "ORDER BY t.date_updated ASC";
+        $query_order_by .= "t.date_updated ASC ";
     }
     else if($date == 'DATE_UPDATED_DESC'){
-        $query_order_by = "ORDER BY t.date_updated DESC";
+        $query_order_by .= "t.date_updated DESC ";
+    }
+
+    //Check sort-by date and days
+    if(!empty($date) && !empty($days)){
+        $query_order_by .= ", ";
+    }
+
+    //Check sort-by days
+    if($days == 'DAYS_START_ASC'){
+        $query_where_days = "AND DATEDIFF(t.date_start, now()) > 0 ";
+        $query_order_by .= "daysStart ASC ";
+    }
+    else if($days == 'DAYS_START_DESC'){
+        $query_where_days = "AND DATEDIFF(t.date_start, now()) > 0 ";
+        $query_order_by .= "daysStart DESC ";
+    }
+    else if($days == 'DAYS_END_ASC'){
+        $query_where_days = "AND DATEDIFF(t.date_end, now()) >= -2 ";
+        $query_order_by .= "daysEnd ASC ";
+    }
+    else if($days == 'DAYS_END_DESC'){
+        $query_where_days = "AND DATEDIFF(t.date_end, now()) >= -2 ";
+        $query_order_by .= "daysEnd DESC ";
     }
 
     //Check project id
     if(!empty($projectId)){
-        $query_project_id_where = "AND t.project_id = '$projectId'";
+        $query_where_project_id = "AND t.project_id = '$projectId' ";
     }
 
     //Check project status
     if(!empty($status)){
-        $query_status_where = "AND t.status = '$status'";
+        $query_where_status = "AND t.status = '$status' ";
     }
 
     //Get user id
@@ -100,13 +132,16 @@ function get_project_tasks_by_search($name, $projectId, $status, $date){
     //Query that check if user exists in database
     $query = "SELECT t.id AS id, t.name AS task, t.status AS status,
               t.date_created AS createdOn, t.date_updated AS updatedOn,
-              p.name AS project, p.id AS projectId
+              p.name AS project, p.id AS projectId,
+              DATEDIFF(t.date_start, now()) as daysStart,
+              DATEDIFF(t.date_end, now()) as daysEnd
               FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE up.user_id = '$userId' AND t.name LIKE '%$name%'"
-              . $query_project_id_where
-              . $query_status_where
+              WHERE up.user_id = '$userId' AND t.name LIKE '%$name%' "
+              . $query_where_project_id
+              . $query_where_status
+              . $query_where_days
               . $query_order_by;
 
     //Execute query
@@ -134,12 +169,31 @@ function get_project_tasks_by_search($name, $projectId, $status, $date){
 
             $data['table'] .= '<td>' . $status . '</td>';
 
+
+            //Remaining days
+            if(!empty($row['daysStart']) && $row['daysStart'] > 0){
+                $data['table'] .= '<td>Starts in '. $row['daysStart']. ' day(s)</td>';
+            }
+            else if(!empty($row['daysEnd']) && $row['daysEnd'] > 0){
+                $data['table'] .= '<td>Ends in '. $row['daysEnd']. ' day(s)</td>';
+            }
+            else if(!empty($row['daysEnd']) && $row['daysEnd'] <= 0){
+                $data['table'] .= $data['table'] .= '<td>Expired</td>';
+            }
+            else{
+                $data['table'] .= '<td></td>';
+            }
+
             //Created On
-            $data['table'] .= '<td>' . $row['createdOn'] . '</td>';
+            $date = strtotime($row['createdOn']);
+
+            $data['table'] .= '<td>' . date("d/m/Y H:i", $date) . '</td>';
 
             //Updated On
             if(!empty($row['updatedOn'])){
-                $data['table'] .= '<td>' . $row['updatedOn'] . '</td>';
+                $date = strtotime($row['updatedOn']);
+
+                $data['table'] .= '<td>' . date("d/m/Y H:i", $date) . '</td>';
             }
             else{
                 $data['table'] .= '<td>None</td>';

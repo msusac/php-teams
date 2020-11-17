@@ -101,10 +101,12 @@ function get_user_by_username($username)
                 </tr>';
 
             //Joined at
+            $date = strtotime($row['dateCreated']);
+
             $data['table'] .=
                 '<tr>
                     <td><b>Joined at</b></td>
-                    <td><i>' . $row['dateCreated'] . '</i></td>
+                    <td><i>' . date("d/m/Y H:i", $date) . '</i></td>
                 </tr>';
 
             //Role

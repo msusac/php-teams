@@ -100,9 +100,11 @@ function check_project_access($projectId){
             </div>';
 
             //Created On
+            $date = strtotime($row['createdOn']);
+
             $data['content'] .= '<div class="row">
                 <div class="col s4 right-align"><p><b>Created On</b></p></div>
-                <div class="col s8 left-align"><p><i>'.$row['createdOn'].'</i></p></div>
+                <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
             </div>';
 
             //Updated By
@@ -115,9 +117,11 @@ function check_project_access($projectId){
 
             //Updated On
             if(!empty($row['updatedOn'])){
+                $date = strtotime($row['updatedOn']);
+
                 $data['content'] .= '<div class="row">
                     <div class="col s4 right-align"><p><b>Updated By</b></p></div>
-                    <div class="col s8 left-align"><p><i>'.$row['updatedOn'].'</i></p></div>
+                    <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
                 </div>';
             }
 

@@ -12,6 +12,12 @@ $(document).ready(function () {
         clearFields();
     });
 
+    //Clear date fields
+    $('#task-add-clear-date-btn').on('click', function () {
+        $('#form-task-add .datepicker').val('');
+        $('#form-task-add .timepicker').val('');
+    });
+
     //Call the action on form submit
     $('#form-task-add').on('submit', function (event) {
 
@@ -61,6 +67,23 @@ $(document).ready(function () {
                     if (data.errors.project) {
                         $('#form-task-add select').after('<div class="red-text" id="text-error">' + data.errors.project + '</div>');
                     }
+                    //Show starting date error message
+                    if (data.errors.dateStart) {
+                        $('#form-task-add #date-start').after('<div class="red-text" id="text-error">' + data.errors.dateStart + '</div>');
+                    }
+                    //Show ending date error message
+                    if (data.errors.dateEnd) {
+                        $('#form-task-add #date-end').after('<div class="red-text" id="text-error">' + data.errors.dateEnd + '</div>');
+                    }
+                    //Show starting time error message
+                    if (data.errors.timeStart) {
+                        $('#form-task-add #time-start').after('<div class="red-text" id="text-error">' + data.errors.timeStart + '</div>');
+                    }
+                    //Show ending time error message
+                    if (data.errors.timeEnd) {
+                        $('#form-task-add #time-end').after('<div class="red-text" id="text-error">' + data.errors.timeEnd + '</div>');
+                    }
+
                     //Show sql error message
                     if (data.errors.sql) {
                         M.toast({ html: data.errors.sql, classes: 'red rounded' });
@@ -90,6 +113,8 @@ $(document).ready(function () {
     function clearFields() {
         $('#form-task-add :input[name="name"]').val('');
         $('#form-task-add #description').val('');
+        $('#form-task-add .datepicker').val('');
+        $('#form-task-add .timepicker').val('');
 
         $('#form-task-add select').prop('selectedIndex', 0);
         $('#form-task-add select').formSelect();

@@ -75,7 +75,7 @@ mysqli_close($connection);
                                 ?>
                             </select>
                         </div>
-                        <div class="input-field col s3">
+                        <div class="input-field col s2">
                             <select name="status" id="status">
                                 <option value="" selected>Status</option>
                                 <option value="NOT_STARTED">Not Started</option>
@@ -84,13 +84,22 @@ mysqli_close($connection);
                                 <option value="REVERSED">Reversed</option>
                             </select>
                         </div>
-                        <div class="input-field col s3">
+                        <div class="input-field col s2">
                             <select name="date" id="date">
-                                <option value="" selected>Sort By</option>
+                                <option value="" selected>Sort By - Date</option>
                                 <option value="DATE_CREATED_ASC">Creation Date - Ascending</option>
                                 <option value="DATE_CREATED_DESC">Date Created - Descending</option>
                                 <option value="DATE_UPDATED_ASC">Date Updated - Ascending</option>
                                 <option value="DATE_UPDATED_DESC">Date Updated - Descending</option>
+                            </select>
+                        </div>
+                        <div class="input-field col s2">
+                            <select name="days" id="days">
+                                <option value="" selected>Sort By - Days Remaining</option>
+                                <option value="DAYS_START_ASC">Days Start - Ascending</option>
+                                <option value="DAYS_START_DESC">Days Start - Descending</option>
+                                <option value="DAYS_END_ASC">Days End - Ascending</option>
+                                <option value="DAYS_END_DESC">Days End - Descending</option>
                             </select>
                         </div>
                     </div>
@@ -110,6 +119,7 @@ mysqli_close($connection);
                         <th>Project</th>
                         <th>Task</th>
                         <th>Status</th>
+                        <th>Days Remaining</th>
                         <th>Created On</th>
                         <th>Updated On</th>
                     </thead>

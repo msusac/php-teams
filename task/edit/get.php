@@ -58,7 +58,8 @@ function check_project_task_access($taskId){
 
     //Query to get project task
     $query = "SELECT t.id AS id, t.name AS name, p.name AS project, p.id AS projectId,
-              t.status AS status, t.description AS description
+              t.status AS status, t.description AS description,
+              t.date_start AS dateStart, t.date_end AS dateEnd
               FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
@@ -87,6 +88,18 @@ function check_project_task_access($taskId){
 
             //Description
             $data['description'] = $row['description'];
+
+            //Starting date
+            if(!empty($row['dateStart'])){
+                $data['dateStart'] = date("d/m/Y", strtotime($row['dateStart']));
+                $data['timeStart'] = date("H:i", strtotime($row['dateStart']));
+            }
+
+            //Ending date
+            if(!empty($row['dateEnd'])){
+                $data['dateEnd'] = date("d/m/Y", strtotime($row['dateEnd']));
+                $data['timeEnd'] = date("H:i", strtotime($row['dateEnd']));
+            }
         }
         else{
             $errors['sql'] = "Project task not found or user has no access to it!";
