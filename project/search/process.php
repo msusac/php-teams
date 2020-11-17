@@ -117,11 +117,15 @@ function get_projects_by_search($name, $creator, $date){
             }
 
             //Created On
-            $data['table'] .= '<td>' . $row['createdOn'] . '</td>';
+            $date = strtotime($row['createdOn']);
+
+            $data['table'] .= '<td>' . date("d/m/Y H:i", $date) . '</td>';
 
             //Updated On
             if(!empty($row['updatedOn'])){
-                $data['table'] .= '<td>' . $row['updatedOn'] . '</td>';
+                $date = strtotime($row['updatedOn']);
+
+                $data['table'] .= '<td>' . date("d/m/Y H:i", $date) . '</td>';
             }
             else{
                 $data['table'] .= '<td>None</td>';

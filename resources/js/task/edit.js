@@ -34,6 +34,31 @@ $(document).ready(function () {
                     $('#form-task-edit #project-label').text('(' + data.project + ')');
                     $('#form-task-edit #status-label').text('(' + data.status + ')');
 
+                    if(data.dateStart){
+                        $('#form-task-edit input[name="date-start"]').val(data.dateStart);
+                    }
+                    else{
+                        $('#form-task-edit input[name="date-start"]').val('');
+                    }
+                    if(data.dateEnd){
+                        $('#form-task-edit input[name="date-end"]').val(data.dateEnd);
+                    }
+                    else{
+                        $('#form-task-edit input[name="date-end"]').val('');
+                    }
+                    if(data.timeStart){
+                        $('#form-task-edit input[name="time-start"]').val(data.timeStart);
+                    }
+                    else{
+                        $('#form-task-edit input[name="time-start"]').val('');
+                    }
+                    if(data.timeEnd){
+                        $('#form-task-edit input[name="time-end"]').val(data.timeEnd);
+                    }
+                    else{
+                        $('#form-task-edit input[name="time-end"]').val('');
+                    }
+
                     $('#form-task-edit select').prop("selectedIndex", 0);
                     $('#form-task-edit select').formSelect();
                 }
@@ -44,6 +69,12 @@ $(document).ready(function () {
                 console.log(data);
                 M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
             });
+    });
+
+    //Clear date fields
+    $('#task-edit-clear-date-btn').on('click', function () {
+        $('#form-task-edit .datepicker').val('');
+        $('#form-task-edit .timepicker').val('');
     });
 
     //Call the action on form submit
@@ -109,6 +140,22 @@ $(document).ready(function () {
                     if (data.errors.status) {
                         $('#form-task-edit #status').after('<div class="red-text" id="text-error">' + data.errors.status + '</div>');
                     }
+                    //Show starting date error message
+                    if (data.errors.dateStart) {
+                        $('#form-task-edit #date-start').after('<div class="red-text" id="text-error">' + data.errors.dateStart + '</div>');
+                    }
+                    //Show ending date error message
+                    if (data.errors.dateEnd) {
+                        $('#form-task-edit #date-end').after('<div class="red-text" id="text-error">' + data.errors.dateEnd + '</div>');
+                    }
+                    //Show starting time error message
+                    if (data.errors.timeStart) {
+                        $('#form-task-edit #time-start').after('<div class="red-text" id="text-error">' + data.errors.timeStart + '</div>');
+                    }
+                    //Show ending time error message
+                    if (data.errors.timeEnd) {
+                        $('#form-task-edit #time-end').after('<div class="red-text" id="text-error">' + data.errors.timeEnd + '</div>');
+                    }
                     //Show sql error message
                     if (data.errors.sql) {
                         M.toast({ html: data.errors.sql, classes: 'red rounded' });
@@ -162,6 +209,31 @@ function editTask() {
 
                 $('#form-task-edit select').prop("selectedIndex", 0);
                 $('#form-task-edit select').formSelect();
+
+                if(data.dateStart){
+                    $('#form-task-edit input[name="date-start"]').val(data.dateStart);
+                }
+                else{
+                    $('#form-task-edit input[name="date-start"]').val('');
+                }
+                if(data.dateEnd){
+                    $('#form-task-edit input[name="date-end"]').val(data.dateEnd);
+                }
+                else{
+                    $('#form-task-edit input[name="date-end"]').val('');
+                }
+                if(data.timeStart){
+                    $('#form-task-edit input[name="time-start"]').val(data.timeStart);
+                }
+                else{
+                    $('#form-task-edit input[name="time-start"]').val('');
+                }
+                if(data.timeEnd){
+                    $('#form-task-edit input[name="time-end"]').val(data.timeEnd);
+                }
+                else{
+                    $('#form-task-edit input[name="time-end"]').val('');
+                }
 
                 //Open modal
                 $('#modal-task-edit').modal('open');

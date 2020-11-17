@@ -132,3 +132,7 @@ img.circle {
     width:250px;
     height:250px;
 }
+
+#modal-task-add.modal, #modal-task-edit.modal{
+    max-width: 800px;
+}

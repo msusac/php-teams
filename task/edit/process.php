@@ -30,8 +30,13 @@ $description = prepare_field($_POST['description']);
 $status = prepare_field($_POST['status']);
 $taskId = prepare_field($_POST['taskHiddenId']);
 $projectId = prepare_field($_POST['project']);
+$dateStart = prepare_field_datetime($_POST['date-start']);
+$dateEnd = prepare_field_datetime($_POST['date-end']);
+$timeStart = prepare_field_datetime($_POST['time-start']);
+$timeEnd = prepare_field_datetime($_POST['time-end']);
 
-validate_form($name, $description, $status, $taskId, $projectId);
+validate_form($name, $description, $status, $taskId, $projectId,
+$dateStart, $dateEnd, $timeStart, $timeEnd);
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -49,6 +54,10 @@ echo json_encode($data);
 function prepare_field($field)
 {
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
+}
+
+function prepare_field_datetime($field){
+    return trim(preg_replace("/[<>&=%'“]/i", "", $field));
 }
 
 //Function to check if user has access to this project
@@ -135,7 +144,7 @@ function update_project($projectId){
     }
 }
 
-//Function to update project task
+//Function to update project task without starting/ending dates
 function update_project_task($name, $description, $status, $taskId, $projectId){
 
     global $connection;
@@ -145,11 +154,40 @@ function update_project_task($name, $description, $status, $taskId, $projectId){
     //Get user
     $user = $_SESSION['$user'];
 
-    //Query for updating project
+    //Query for updating project task
     $query = "UPDATE task_table 
               SET name = '$name', description = '$description',
               status = '$status', updated_by = '$user',
-              project_id = '$projectId'
+              project_id = '$projectId', date_start = null,
+              date_end = null
+              WHERE id = '$taskId'";
+
+    //Check if there is any errors
+    if(!$result = mysqli_query($connection, $query)){
+        $errors['sql'] = mysqli_error($connection);
+    }
+    else{
+        $data['status'] = preg_replace("/_/i", " ", $status);
+        update_project($projectId);
+    }
+}
+
+//Function to update project task with starting/ending dates
+function update_project_task_timestamp($name, $description, $status, $taskId, $projectId, $timestampStart, $timestampEnd){
+
+    global $connection;
+    global $errors;
+    global $data;
+
+    //Get user
+    $user = $_SESSION['$user'];
+
+    //Query for updating project task
+    $query = "UPDATE task_table 
+              SET name = '$name', description = '$description',
+              status = '$status', updated_by = '$user',
+              project_id = '$projectId', date_start = '$timestampStart',
+              date_end = '$timestampEnd'
               WHERE id = '$taskId'";
 
     //Check if there is any errors
@@ -163,9 +201,47 @@ function update_project_task($name, $description, $status, $taskId, $projectId){
 }
 
 //Validate form
-function validate_form($name, $description, $status, $taskId, $projectId)
+function validate_form($name, $description, $status, $taskId, $projectId,
+$dateStart, $dateEnd, $timeStart, $timeEnd)
 {
     global $errors;
+
+    //Set timestamps
+    $timestampStart = null;
+    $timestampEnd = null;
+
+    //Check if user wants to set starting and ending date
+    if(!empty($dateStart) || !empty($dateEnd) || !empty($timeStart) || !empty($timeEnd)){
+
+        if(empty($dateStart))
+            $errors['dateStart'] = 'Starting date must not be empty.';
+        else if(!date('d/m/Y', strtotime(str_replace('/', '-', $dateStart))))
+            $errors['dateStart'] = 'Starting date format must be dd/mm/YYYY';
+        
+        if(empty($dateEnd))
+            $errors['dateEnd'] = 'Ending date must not be empty.';
+        else if(!date('d/m/Y', strtotime(str_replace('/', '-', $dateEnd))))
+            $errors['dateEnd'] = 'Ending date format must be dd/mm/YYYY';
+
+        if(empty($timeStart))
+            $errors['timeStart'] = 'Starting time must not be empty.';
+        else if(!date('H:i', strtotime($timeStart)))
+            $errors['timeStart'] = 'Starting time format must be hh:mm';
+
+        if(empty($timeEnd))
+            $errors['timeEnd'] = 'Ending time must not be empty.';
+        else if(!date('H:i', strtotime($timeEnd)))
+            $errors['timeEnd'] = 'Ending time format must be hh:mm';
+
+        if(empty($errors)){
+            $timestampStart = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateStart) . ' ' . $timeStart));
+            $timestampEnd = date('Y-m-d H:i:s', strtotime(str_replace('/', '-', $dateEnd) . ' ' . $timeEnd));
+
+            if($timestampStart > $timestampEnd){
+                $errors['dateStart'] = 'Starting datetime must not be greater than ending datetime.';
+            }
+        }
+    }
 
     if (empty($name))
         $errors['name'] = "Project name is required.";
@@ -177,7 +253,7 @@ function validate_form($name, $description, $status, $taskId, $projectId)
     else if (strlen($description) < 5 || strlen($description) > 550)
         $errors['description'] = "Description must be between 5 and 550 characters";
 
-    if(empty($status))
+    if(empty($status) || !in_array($status, array('NOT_STARTED', 'IN_PROGRESS', 'DONE', 'REVERSED')))
         $errors['status'] = "Please select status!";
 
     check_project_access($projectId);
@@ -185,7 +261,11 @@ function validate_form($name, $description, $status, $taskId, $projectId)
     check_project_task_access($taskId);
 
     if(empty($errors)){
-        update_project_task($name, $description, $status, $taskId, $projectId);
+        //Check if user wants to save starting/ending dates
+        if(!empty($timestampStart) && !empty($timestampEnd))
+             update_project_task_timestamp($name, $description, $status, $taskId, $projectId, $timestampStart, $timestampEnd);
+        else
+            update_project_task($name, $description, $status, $taskId, $projectId);
     }
 }
 

@@ -60,7 +60,8 @@ function check_project_access($taskId){
     $query = "SELECT t.id AS id, t.name AS name, 
               t.description AS description, t.status AS status,
               t.created_by AS createdBy, t.updated_by AS updatedBy,
-              t.date_created AS createdOn, t.date_updated AS updatedOn
+              t.date_created AS createdOn, t.date_updated AS updatedOn,
+              t.date_start AS dateStart, t.date_end AS dateEnd
               FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
@@ -96,6 +97,26 @@ function check_project_access($taskId){
                 <div class="col s8 left-align"><p><i>'. $status . '</i></p></div>
             </div>';
 
+            //Starting date
+            if(!empty($row['dateStart'])){
+                $date = strtotime($row['dateStart']);
+
+                $data['content'] .= '<div class="row">
+                    <div class="col s4 right-align"><p><b>Starting date</b></p></div>
+                    <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
+                </div>';
+            }
+
+            //Ending date
+            if(!empty($row['dateEnd'])){
+                $date = strtotime($row['dateEnd']);
+
+                $data['content'] .= '<div class="row">
+                    <div class="col s4 right-align"><p><b>Ending date</b></p></div>
+                    <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
+                </div>';
+            }
+
             //Created By
             $data['content'] .= '<div class="row">
                 <div class="col s4 right-align"><p><b>Created By</b></p></div>
@@ -103,9 +124,11 @@ function check_project_access($taskId){
             </div>';
 
             //Created On
+            $date = strtotime($row['createdOn']);
+
             $data['content'] .= '<div class="row">
                 <div class="col s4 right-align"><p><b>Created On</b></p></div>
-                <div class="col s8 left-align"><p><i>'.$row['createdOn'].'</i></p></div>
+                <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
             </div>';
 
             //Updated By
@@ -118,9 +141,11 @@ function check_project_access($taskId){
 
             //Updated On
             if(!empty($row['updatedOn'])){
+                $date = strtotime($row['updatedOn']);
+
                 $data['content'] .= '<div class="row">
                     <div class="col s4 right-align"><p><b>Updated By</b></p></div>
-                    <div class="col s8 left-align"><p><i>'.$row['updatedOn'].'</i></p></div>
+                    <div class="col s8 left-align"><p><i>'.date("d/m/Y H:i", $date).'</i></p></div>
                 </div>';
             }
 
