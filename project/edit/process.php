@@ -122,7 +122,7 @@ function update_project_image($projectId, $name, $description, $image){
     $target = APP_ROOT . "resources/img/uploads/" . basename($image);
 
     //Upload image
-    if (!move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+    if (!move_uploaded_file($_FILES['image']['tmp_name'], $target) && !empty($image)) {
         $errors['image'] = "Failed to upload image";
     }
     else{
@@ -176,7 +176,7 @@ function validate_form($projectId, $name, $description, $image)
     //Check errors
     if(empty($errors)){
         //Check if user wants to change image or not
-        if(isset($_POST['save_image']) && !empty($image)){
+        if(isset($_POST['save_image'])){
             update_project_image($projectId, $name, $description, $image);
         }
         else{

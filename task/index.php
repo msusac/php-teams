@@ -55,7 +55,7 @@ mysqli_close($connection);
     <main class="container">
         <section>
             <div class="row center-align">
-                <h5>Projects Tasks table</h5>
+                <h4>Projects Tasks table</h4>
             </div>
             <div class="row">
                 <form class="col s12" method="POST" action="process.php" id="form-tasks-search">

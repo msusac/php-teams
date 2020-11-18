@@ -17,22 +17,6 @@
                 </div>
                 <div class="row modal-form-row">
                     <div class="input-field col s8">
-                        <select name="project" id="project">
-                            <option value="" selected>Select Project</option>
-                            <?php
-                            foreach ($projectSelect as $project) {
-                                //Prepare option fields
-                                echo '<option value="' . $project['id'] . '">' . $project['name'] . ' - ' . $project['id'] . '</option>';
-                            }
-                            ?>
-                        </select>
-                    </div>
-                    <div class="col s4">
-                        <p id="project-label"></p>
-                    </div>
-                </div>
-                <div class="row modal-form-row">
-                    <div class="input-field col s8">
                         <select name="status" id="status">
                             <option value="" selected>Status</option>
                             <option value="NOT_STARTED">Not Started</option>
