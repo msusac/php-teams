@@ -24,7 +24,7 @@ header nav ul li a:hover, ul.sidenav li a:hover{
     font-weight: bolder;
 }
 
-header nav ul li a, header nav div a.brand-logo, ul.sidenav li a{
+header nav ul li a, header nav div a.brand-logo, ul.sidenav li a, section h4{
     -webkit-text-fill-color: black;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: white;
@@ -135,4 +135,10 @@ img.circle {
 
 #modal-task-add.modal, #modal-task-edit.modal{
     max-width: 800px;
+}
+
+.dropdown-content {
+    max-height: 350px !important;
+    overflow-y: auto !important;
+    backface-visibility: hidden !important;
 }

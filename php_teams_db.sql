@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 17, 2020 at 08:29 PM
+-- Generation Time: Nov 18, 2020 at 05:25 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -62,10 +62,10 @@ CREATE TABLE `project_table` (
 --
 
 INSERT INTO `project_table` (`id`, `name`, `description`, `created_by`, `updated_by`, `date_created`, `date_updated`, `image`) VALUES
-(12, 'My Hotel', 'This is test project! Updated!\r\n\r\n-Add potato', 'administrator', 'administrator', '2020-11-12 18:17:27', '2020-11-13 14:10:05', 'tumblr_oq06mlSBM11vubw39o1_500.gif'),
+(12, 'My Hotel', 'This is test project! Updated!\r\n\r\n-Add potato', 'administrator', 'administrator', '2020-11-12 18:17:27', '2020-11-18 16:22:04', 'ba178ec5b3dca4f4afde4baa0446dcf7.jpg'),
 (15, 'Test User Project', 'Test User Project', 'testuser', 'testuser', '2020-11-12 18:22:49', '2020-11-17 19:27:56', ''),
 (17, 'Project Test Two', 'Project Test Two', 'administrator', 'administrator', '2020-11-13 18:49:59', '2020-11-16 12:50:35', 'tumblr_mw3hfwEsBz1s8xkbjo1_500.jpg'),
-(19, 'Java Hotel V2', 'Testtesttest', 'administrator', 'administrator', '2020-11-13 18:58:39', '2020-11-13 18:59:26', 'ba178ec5b3dca4f4afde4baa0446dcf7.jpg'),
+(19, 'Java Hotel V2', 'Testtesttest', 'administrator', 'administrator', '2020-11-13 18:58:39', '2020-11-18 16:22:25', 'tumblr_oq06mlSBM11vubw39o1_500.gif'),
 (20, 'NewBie Project', 'This is my newbie project!', 'testuser3', 'testuser3', '2020-11-13 19:22:23', '2020-11-13 19:24:53', 'tumblr_mw3hfwEsBz1s8xkbjo1_500.jpg'),
 (22, 'Test User Project Second', 'Test User Project Second', 'testuser2', 'testuser2', '2020-11-16 13:09:43', '2020-11-16 13:09:51', 'tumblr_oq06mlSBM11vubw39o1_500.gif');
 
@@ -94,11 +94,10 @@ CREATE TABLE `task_table` (
 --
 
 INSERT INTO `task_table` (`id`, `name`, `description`, `status`, `created_by`, `updated_by`, `date_start`, `date_end`, `date_created`, `date_updated`, `project_id`) VALUES
-(1, 'First Task', 'Add Potato!\r\nAdd Tomato!', 'DONE', 'administrator', 'administrator', NULL, NULL, '2020-11-13 14:17:21', '2020-11-17 14:33:38', 17),
 (6, 'Java This V2', 'asdasdasdasdasdas', 'REVERSED', 'administrator', 'administrator', NULL, NULL, '2020-11-16 12:10:54', '2020-11-17 14:33:52', 19),
 (7, 'My Task', 'My Task', 'IN_PROGRESS', 'testuser2', 'testuser2', NULL, NULL, '2020-11-16 13:10:16', '2020-11-17 14:34:10', 22),
 (8, 'Task with time', 'Testing', 'NOT_STARTED', 'administrator', NULL, NULL, NULL, '2020-11-17 14:31:16', NULL, 19),
-(12, 'Java Hotel', 'sdfsdf', 'IN_PROGRESS', 'administrator', 'administrator', '2020-11-17 07:00:00', '2020-11-20 08:45:00', '2020-11-17 15:35:33', '2020-11-17 19:13:22', 12),
+(12, 'Java Hotel', 'sdfsdf', 'REVERSED', 'administrator', 'administrator', '2020-11-17 07:00:00', '2020-11-20 08:45:00', '2020-11-17 15:35:33', '2020-11-18 15:42:51', 12),
 (14, 'Java Hotel', 'asdasdassdadas', 'IN_PROGRESS', 'administrator', 'administrator', NULL, NULL, '2020-11-17 15:58:52', '2020-11-17 16:06:10', 19),
 (15, 'First Project Task Without Time', 'First Project Task Without Time', 'IN_PROGRESS', 'administrator', 'administrator', '2020-11-17 07:00:00', '2020-11-25 16:00:00', '2020-11-17 16:29:05', '2020-11-17 17:44:11', 12),
 (16, 'Second Project With Time', 'Second Project With Time', 'NOT_STARTED', 'administrator', NULL, '2020-11-03 17:34:00', '2020-11-25 17:34:00', '2020-11-17 16:34:22', NULL, 17),

@@ -61,7 +61,8 @@ function check_project_access($taskId){
               t.description AS description, t.status AS status,
               t.created_by AS createdBy, t.updated_by AS updatedBy,
               t.date_created AS createdOn, t.date_updated AS updatedOn,
-              t.date_start AS dateStart, t.date_end AS dateEnd
+              t.date_start AS dateStart, t.date_end AS dateEnd,
+              p.name AS project, p.id AS projectId
               FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
@@ -89,9 +90,15 @@ function check_project_access($taskId){
                 <p>'.nl2br($row['description']).'</p>
             </div>';
 
-            $status = preg_replace("/_/i", " ", $row['status']);
+            //Project
+            $data['content'] .= '<div class="row">
+                <div class="col s4 right-align"><p><b>Project</b></p></div>
+                <div class="col s8 left-align"><p><i>'. $row['project'] . ' - '. $row['projectId'] .'</i></p></div>
+            </div>';
 
             //Status
+            $status = preg_replace("/_/i", " ", $row['status']);
+
             $data['content'] .= '<div class="row">
                 <div class="col s4 right-align"><p><b>Status</b></p></div>
                 <div class="col s8 left-align"><p><i>'. $status . '</i></p></div>

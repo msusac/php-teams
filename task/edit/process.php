@@ -29,7 +29,7 @@ $name = prepare_field($_POST['name']);
 $description = prepare_field($_POST['description']);
 $status = prepare_field($_POST['status']);
 $taskId = prepare_field($_POST['taskHiddenId']);
-$projectId = prepare_field($_POST['project']);
+$projectId = prepare_field($_POST['taskHiddenId']);
 $dateStart = prepare_field_datetime($_POST['date-start']);
 $dateEnd = prepare_field_datetime($_POST['date-end']);
 $timeStart = prepare_field_datetime($_POST['time-start']);
@@ -96,7 +96,7 @@ function check_project_access($projectId){
 }
 
 //Function to check if user has access to this project task
-function check_project_task_access($taskId){
+function check_project_task_access($projectId, $taskId){
 
     global $connection;
     global $errors;
@@ -108,7 +108,8 @@ function check_project_task_access($taskId){
     $query = "SELECT * FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
-              WHERE up.user_id = '$userId' AND t.id = '$taskId'";
+              WHERE up.user_id = '$userId' AND t.id = '$taskId'
+              AND t.project_id = '$projectId'";
 
     //Execute query
     $result = mysqli_query($connection, $query);
@@ -156,10 +157,8 @@ function update_project_task($name, $description, $status, $taskId, $projectId){
 
     //Query for updating project task
     $query = "UPDATE task_table 
-              SET name = '$name', description = '$description',
-              status = '$status', updated_by = '$user',
-              project_id = '$projectId', date_start = null,
-              date_end = null
+              SET name = '$name', description = '$description', status = '$status', 
+              updated_by = '$user', date_start = null, date_end = null
               WHERE id = '$taskId'";
 
     //Check if there is any errors
@@ -184,10 +183,8 @@ function update_project_task_timestamp($name, $description, $status, $taskId, $p
 
     //Query for updating project task
     $query = "UPDATE task_table 
-              SET name = '$name', description = '$description',
-              status = '$status', updated_by = '$user',
-              project_id = '$projectId', date_start = '$timestampStart',
-              date_end = '$timestampEnd'
+              SET name = '$name', description = '$description', status = '$status', 
+              updated_by = '$user', date_start = '$timestampStart', date_end = '$timestampEnd'
               WHERE id = '$taskId'";
 
     //Check if there is any errors
@@ -258,7 +255,7 @@ $dateStart, $dateEnd, $timeStart, $timeEnd)
 
     check_project_access($projectId);
 
-    check_project_task_access($taskId);
+    check_project_task_access($projectId, $taskId);
 
     if(empty($errors)){
         //Check if user wants to save starting/ending dates

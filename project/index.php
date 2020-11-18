@@ -24,7 +24,7 @@ if (!isset($_SESSION['$user'])) {
     <main class="container">
         <section>
             <div class="row center-align">
-                <h5>Projects table</h5>
+                <h4>Projects table</h4>
             </div>
             <div class="row">
                 <form class="col s12" method="POST" action="process.php" id="form-projects-search">

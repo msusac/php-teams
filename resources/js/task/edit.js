@@ -31,7 +31,6 @@ $(document).ready(function () {
 
                     $('#form-task-edit :input[name="name"]').val(data.name);
                     $('#form-task-edit #description').val(data.description);
-                    $('#form-task-edit #project-label').text('(' + data.project + ')');
                     $('#form-task-edit #status-label').text('(' + data.status + ')');
 
                     if(data.dateStart){
@@ -115,7 +114,6 @@ $(document).ready(function () {
                         readTask(id);
 
                         //Update fields
-                        $('#form-task-edit #project-label').text('(' + data.project + ')');
                         $('#form-task-edit #status-label').text('(' + data.status + ')');
         
                         $('#form-task-edit select').prop("selectedIndex", 0);
@@ -132,11 +130,7 @@ $(document).ready(function () {
                     if (data.errors.description) {
                         $('#form-task-edit #description').after('<div class="red-text" id="text-error">' + data.errors.description + '</div>');
                     }
-                    //Show project selection error message
-                    if (data.errors.project) {
-                        $('#form-task-edit #project').after('<div class="red-text" id="text-error">' + data.errors.project + '</div>');
-                    }
-                    //Show project selection error message
+                    //Show status selection error message
                     if (data.errors.status) {
                         $('#form-task-edit #status').after('<div class="red-text" id="text-error">' + data.errors.status + '</div>');
                     }
@@ -204,7 +198,6 @@ function editTask() {
 
                 $('#form-task-edit :input[name="name"]').val(data.name);
                 $('#form-task-edit #description').val(data.description);
-                $('#form-task-edit #project-label').text('(' + data.project + ')');
                 $('#form-task-edit #status-label').text('(' + data.status + ')');
 
                 $('#form-task-edit select').prop("selectedIndex", 0);
