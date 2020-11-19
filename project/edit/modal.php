@@ -37,6 +37,7 @@
                 </div>
                 <div class="row center-align">
                     <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Save</button>
+                    <a class="modal-action waves-effect btn brand" id="project-edit-clear-image-btn">Clear Image</a>
                     <a class="modal-action waves-effect btn brand" id="project-edit-clear-btn">Clear</a>
                     <a class="modal-action modal-close waves-effect btn brand">Close</a>
                 </div>

@@ -16,8 +16,7 @@ include('../config/db_connect.php');
 $projectSelect = Array();
 
 //Get user id
-$userId = $_SESSION['$user_id'];
-
+$userId = $_SESSION['$userId'];
 
 //Query to get all projects associated with user
 $query = "SELECT p.id AS id, p.name AS name
@@ -53,7 +52,7 @@ mysqli_close($connection);
     <?php include(APP_ROOT . 'templates/header.php') ?>
 
     <main class="container">
-        <section>
+        <section id="section-table">
             <div class="row center-align">
                 <h4>Projects Tasks table</h4>
             </div>
@@ -87,7 +86,7 @@ mysqli_close($connection);
                         <div class="input-field col s2">
                             <select name="date" id="date">
                                 <option value="" selected>Sort By - Date</option>
-                                <option value="DATE_CREATED_ASC">Creation Date - Ascending</option>
+                                <option value="DATE_CREATED_ASC">Date Created - Ascending</option>
                                 <option value="DATE_CREATED_DESC">Date Created - Descending</option>
                                 <option value="DATE_UPDATED_ASC">Date Updated - Ascending</option>
                                 <option value="DATE_UPDATED_DESC">Date Updated - Descending</option>

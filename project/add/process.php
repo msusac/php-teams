@@ -50,7 +50,7 @@ function prepare_field($field)
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
-//Add user as creator to latest project he created
+//Function to add user as creator to latest project he created
 function add_creator_to_project(){
 
     global $connection;
@@ -60,9 +60,9 @@ function add_creator_to_project(){
     $user = $_SESSION['$user'];
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that search user's latest project
+    //Query that searches user's latest project
     $query = "SELECT id, name FROM project_table 
               WHERE created_by = '$user' 
               ORDER BY date_created DESC
@@ -109,7 +109,7 @@ function save_project($name, $description)
     //Query for inserting project
     $query = "INSERT INTO project_table (name, description, created_by) VALUES ('$name', '$description', '$user')";
 
-    //Check if there is any errors
+    //Check if there are any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
     }
@@ -140,7 +140,7 @@ function save_project_image($name, $description, $image)
         //Query for inserting project
         $query = "INSERT INTO project_table (name, description, created_by, image) VALUES ('$name', '$description', '$user', '$image')";
 
-        //Check if there is any errors
+        //Check if there are any errors
         if(!$result = mysqli_query($connection, $query)){
             $errors['sql'] = mysqli_error($connection);
         }

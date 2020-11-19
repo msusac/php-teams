@@ -14,7 +14,7 @@ $errors = array();
 $data = array();
 
 //Check user access
-if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$user_role'] != 'ROLE_ADMIN'){
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$userRole'] != 'ROLE_ADMIN'){
     $errors['session'] = 'Unauthorized access!';
 
     $data['success'] = false;
@@ -53,21 +53,21 @@ function activate_user($id){
     global $errors;
 
     //Query to insert user authority
-    $query = "INSERT INTO user_authority_table (user_id, authority_id) VALUES ($id, 2)";
+    $query = "INSERT INTO user_authority_table (user_id, authority_id) VALUES ('$id', '2')";
 
-    //Execute query, print error if query is unsuccessfull
+    //Check result
     if (!$result = mysqli_query($connection, $query)) {
         $errors['sql'] = mysqli_error($connection);
     }
 }
 
-//Check if user has already role
+//Check if that user account is alread activated
 function check_user($username){
 
     global $connection;
     global $errors;
 
-    //Query that check if user exists in database
+    //Query that checks if user exists in database
     $query = "SELECT u.id AS userId, a.name AS role
               FROM user_table u 
               LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 

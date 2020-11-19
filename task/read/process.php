@@ -37,13 +37,13 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Successfully retrieved project!';
+    $data['message'] = 'Successfully retrieved project task!';
 }
 
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project
+//Function for checking user access to this project task
 function check_project_access($taskId){
 
     global $connection;
@@ -54,9 +54,9 @@ function check_project_access($taskId){
     $data['content'] = '';
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that checks if user has access to project task
     $query = "SELECT t.id AS id, t.name AS name, 
               t.description AS description, t.status AS status,
               t.created_by AS createdBy, t.updated_by AS updatedBy,
@@ -78,7 +78,7 @@ function check_project_access($taskId){
         //Check if row is empty or not
         if(!empty($row)){
 
-            //Hidden Project Id
+            //Hidden Project Task Id
             $data['content'] .= '<input type="hidden" id="taskHiddenId" name="taskHiddenId" value="'.$row['id'].'">';
 
             //Task Name

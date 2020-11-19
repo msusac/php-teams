@@ -24,7 +24,7 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
     exit();
 }
 
-//Get user
+//Function for getting user's fullname by username
 get_user_fullname_by_username($_SESSION['$user']);
 
 //Check if there are any errors
@@ -39,7 +39,7 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Get User Fullname by Username
+//Function for getting user's fullname by username
 function get_user_fullname_by_username($username)
 {
     global $connection;

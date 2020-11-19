@@ -42,16 +42,16 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project
+//Function for checking user access to selected project
 function check_project_access($projectId){
 
     global $connection;
     global $errors;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that checks if user is creator of selected project
     $query = "SELECT * FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id
               WHERE p.id = '$projectId' AND up.user_id = '$userId' AND up.role = 'CREATOR'";
@@ -82,7 +82,7 @@ function delete_project($projectId){
     global $connection;
     global $errors;
 
-    //Query that check if user exists in database
+    //Query that check if user exists in database before deleting
     $query = "DELETE FROM project_table
               WHERE id = '$projectId'";
 

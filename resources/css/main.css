@@ -116,13 +116,15 @@ div.icon-block i{
 }
 
 #form-users-search, #table-users, #form-projects-search,
-#table-projects, #form-tasks-search, #table-tasks {
+#table-projects, #form-tasks-search, #table-tasks,
+#form-requests-search, #table-requests {
     background-color: white;
 
     border:3px solid black;
 }
 
-#table-users tbody tr, #table-projects tbody tr, #table-tasks tbody tr{
+#table-users tbody tr, #table-projects tbody tr, 
+#table-tasks tbody tr, #table-requests tbody tr{
     cursor: pointer;
 }
 
@@ -141,4 +143,8 @@ img.circle {
     max-height: 350px !important;
     overflow-y: auto !important;
     backface-visibility: hidden !important;
+}
+
+#section-table {
+    min-height: 1000px;
 }

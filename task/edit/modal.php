@@ -29,6 +29,11 @@
                         <p id="status-label"></p>
                     </div>
                 </div>
+                <div class="row left-align">
+                    <div class="input-field col s6">
+                        <b>Starting/Ending Dates (Optional)</b>
+                    </div>
+                </div>
                 <div class="row center-align">
                     <div class="input-field col s6">
                         <label for="date-start">Start Date</label>

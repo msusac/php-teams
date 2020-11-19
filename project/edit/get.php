@@ -20,7 +20,6 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
     $data['success'] = false;
     $data['errors']  = $errors;
 
-    echo($_SESSION['$user']);
     echo json_encode($data);
     exit();
 }
@@ -43,7 +42,7 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project
+//Function for checking user access to selected project
 function check_project_access($projectId){
 
     global $connection;
@@ -54,9 +53,9 @@ function check_project_access($projectId){
     $data['content'] = '';
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that check if user is creator of selected project
     $query = "SELECT p.id AS id, p.name AS name, p.image As image, p.description AS description
               FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id

@@ -29,12 +29,13 @@ $name = prepare_field($_POST['name']);
 $description = prepare_field($_POST['description']);
 $status = prepare_field($_POST['status']);
 $taskId = prepare_field($_POST['taskHiddenId']);
-$projectId = prepare_field($_POST['taskHiddenId']);
+$projectId = prepare_field($_POST['projectHiddenId']);
 $dateStart = prepare_field_datetime($_POST['date-start']);
 $dateEnd = prepare_field_datetime($_POST['date-end']);
 $timeStart = prepare_field_datetime($_POST['time-start']);
 $timeEnd = prepare_field_datetime($_POST['time-end']);
 
+//Validate form
 validate_form($name, $description, $status, $taskId, $projectId,
 $dateStart, $dateEnd, $timeStart, $timeEnd);
 
@@ -56,11 +57,12 @@ function prepare_field($field)
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
+//Preparing datetime fields for database without SQL Injection
 function prepare_field_datetime($field){
     return trim(preg_replace("/[<>&=%'“]/i", "", $field));
 }
 
-//Function to check if user has access to this project
+//Function to check user access to selected project
 function check_project_access($projectId){
 
     global $connection;
@@ -68,9 +70,9 @@ function check_project_access($projectId){
     global $data;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that check if user has access to selected project
     $query = "SELECT p.id AS id, p.name AS name FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id
               WHERE p.id = '$projectId' AND up.user_id = '$userId'";
@@ -102,14 +104,14 @@ function check_project_task_access($projectId, $taskId){
     global $errors;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query to get project task
+    //Query that checks if user has access to this project task
     $query = "SELECT * FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
               WHERE up.user_id = '$userId' AND t.id = '$taskId'
-              AND t.project_id = '$projectId'";
+              AND p.id = '$projectId'";
 
     //Execute query
     $result = mysqli_query($connection, $query);

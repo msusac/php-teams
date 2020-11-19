@@ -22,7 +22,7 @@ if (!isset($_SESSION['$user'])) {
     <?php include(APP_ROOT . 'templates/header.php') ?>
 
     <main class="container">
-        <section>
+        <section id="section-table">
             <div class="row center-align">
                 <h4>Projects table</h4>
             </div>
@@ -40,7 +40,7 @@ if (!isset($_SESSION['$user'])) {
                         <div class="input-field col s4">
                             <select name="date" id="date">
                                 <option value="" selected>Sort By</option>
-                                <option value="DATE_CREATED_ASC">Creation Date - Ascending</option>
+                                <option value="DATE_CREATED_ASC">Date Created - Ascending</option>
                                 <option value="DATE_CREATED_DESC">Date Created - Descending</option>
                                 <option value="DATE_UPDATED_ASC">Date Updated - Ascending</option>
                                 <option value="DATE_UPDATED_DESC">Date Updated - Descending</option>

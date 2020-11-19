@@ -49,13 +49,13 @@ function prepare_field($field)
     return trim(preg_replace("/[;,<>&=%:'“ .]/i", "", $field));
 }
 
-//Login operation
+//Function for login operation
 function login_user($username, $password)
 {
     global $connection;
     global $errors;
 
-    //Query that check if user exists in database
+    //Query that checks if user exists in database
     $query = "SELECT u.id AS userId, u.username AS username , a.name AS role
               FROM user_table u 
               LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 
@@ -76,8 +76,8 @@ function login_user($username, $password)
             if(!empty($row['role'])){
 
                 $_SESSION['$user'] = $row['username'];
-                $_SESSION['$user_id'] = $row['userId'];
-                $_SESSION['$user_role'] = $row['role'];
+                $_SESSION['$userId'] = $row['userId'];
+                $_SESSION['$userRole'] = $row['role'];
             }
             else{
                 $errors['login'] = 'Your account is not activated.';

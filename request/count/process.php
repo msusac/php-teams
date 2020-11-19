@@ -14,7 +14,7 @@ $errors = array();
 $data = array();
 
 //Check user access
-if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$userRole'] != 'ROLE_ADMIN'){
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
     $errors['session'] = 'Unauthorized access!';
 
     $data['success'] = false;
@@ -24,8 +24,8 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$userRo
     exit();
 }
 
-//Function to count all user accounts that are not activated
-count_not_activated_users();
+//Function to count all pending requests that user received
+count_pending_request();
 
 //Check if there are any errors
 if (!empty($errors)) {
@@ -39,18 +39,19 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function to count all user accounts that are not activated
-function count_not_activated_users(){
+//Function to count all pending requests that user received
+function count_pending_request(){
 
     global $connection;
     global $data;
 
-    //Query to count all user accounts that are not activated
-    $query = "SELECT COUNT(u.id) AS count
-              FROM user_table u 
-              LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 
-              LEFT OUTER JOIN authority_table a ON a.id = ua.authority_id
-              WHERE a.name IS NULL";
+    //Get user id
+    $userToId = $_SESSION['$userId'];
+
+    //Query to count all pending requests that user received
+    $query = "SELECT COUNT(id) AS count
+              FROM request_table
+              WHERE user_to_id = '$userToId' AND status = 'PENDING'";
 
     //Check if there are any errors
     if($result = mysqli_query($connection, $query)){
