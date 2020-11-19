@@ -40,6 +40,12 @@ $(document).ready(function () {
             });
     });
 
+    //Clear image field
+    $("#project-edit-clear-image-btn").on('click', function (){
+        $('#form-project-edit #image').val(null);
+        $('#form-project-edit .file-path').val('');
+    });
+
     //Call the action on form submit
     $('#form-project-edit').on('submit', function (event) {
 

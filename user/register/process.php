@@ -46,6 +46,18 @@ else {
 //Return all data to an AJAX call
 echo json_encode($data);
 
+//Preparing fields for database without SQL Injection
+function prepare_field($field)
+{
+    return trim(preg_replace("/[;,<>&=%:'“ .]/i", "", $field));
+}
+
+//Preparing e-mail field for database without SQL Injectio
+function prepare_field_email($field)
+{
+    return trim(preg_replace("/[;,<>&=%:'“ ]/i", "", $field));
+}
+
 //Check if email address already exists in database
 function check_email($email)
 {
@@ -96,18 +108,6 @@ function check_username($username)
     else{
         $errors['sql'] = mysqli_error($connection);
     }
-}
-
-//Preparing fields for database without SQL Injection
-function prepare_field($field)
-{
-    return trim(preg_replace("/[;,<>&=%:'“ .]/i", "", $field));
-}
-
-//Preparing e-mail field for database without SQL Injectio
-function prepare_field_email($field)
-{
-    return trim(preg_replace("/[;,<>&=%:'“ ]/i", "", $field));
 }
 
 //Save user

@@ -14,7 +14,7 @@ $errors = array();
 $data = array();
 
 //Check user access
-if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$user_role'] != 'ROLE_ADMIN'){
+if(!isset($_SESSION['$user']) || empty($_SESSION['$user']) || $_SESSION['$userRole'] != 'ROLE_ADMIN'){
     $errors['session'] = 'Unauthorized access!';
 
     $data['success'] = false;
@@ -50,6 +50,7 @@ function prepare_field($field)
     return trim(preg_replace("/[;,<>&=%:'“]/i", "", $field));
 }
 
+//Function for searching users
 function get_users_by_search($username, $email, $role){
 
     global $connection;
@@ -60,24 +61,25 @@ function get_users_by_search($username, $email, $role){
     $data['table'] = '';
 
     //Initialize where query
-    $query_where = "WHERE username LIKE '%$username%' AND email LIKE '%$email%'";
+    $query_where = '';
 
     //Check if role is admin, user or null
     if($role == 'ADMIN'){
-        $query_where = "WHERE username LIKE '%$username%' AND email LIKE '%$email%' AND a.name = 'ROLE_ADMIN'";
+        $query_where = "AND a.name = 'ROLE_ADMIN' ";
     }
     else if($role == 'USER'){
-        $query_where = "WHERE username LIKE '%$username%' AND email LIKE '%$email%' AND a.name = 'ROLE_USER'";
+        $query_where = "AND a.name = 'ROLE_USER' ";
     }
     else if($role == 'NOT_ACTIVATED'){
-        $query_where = "WHERE username LIKE '%$username%' AND email LIKE '%$email%' AND a.name IS null";
+        $query_where = "AND a.name IS null ";
     }
 
-    //Query that check if user exists in database
+    //Query that checks if user exists in database
     $query = "SELECT u.username AS username, u.email AS email, a.name AS role 
               FROM user_table u 
               LEFT OUTER JOIN user_authority_table ua ON ua.user_id = u.id 
               LEFT OUTER JOIN authority_table a ON a.id = ua.authority_id
+              WHERE username LIKE '%$username%' AND email LIKE '%$email%'
               ".$query_where."
               ORDER BY username ASC";
 

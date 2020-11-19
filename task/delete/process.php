@@ -42,16 +42,16 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project task
+//Function for checking user access to selected project task
 function check_task_access($taskId){
 
     global $connection;
     global $errors;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that check if user has access to selected project
     $query = "SELECT * FROM task_table t
               INNER JOIN project_table p ON p.id = t.project_id
               INNER JOIN user_project_table up ON up.project_id = p.id
@@ -83,8 +83,8 @@ function delete_task($taskId){
     global $connection;
     global $errors;
 
-    //Query that check if user exists in database
-    $query = "DELETE FROM task_table
+    //Query that check if task exists in database before deleting
+    $query = "DELETE FROM task_table 
               WHERE id = '$taskId'";
 
     //Execute query

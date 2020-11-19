@@ -78,9 +78,9 @@ function get_projects_by_search($name, $creator, $date){
     }
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
     
-    //Query that check if user exists in database
+    //Query that searches projects
     $query = "SELECT p.id AS id, p.name AS name, p.created_by AS createdBy, p.updated_by AS updatedBy,
               p.date_created AS createdOn, p.date_updated AS updatedOn
               FROM project_table p
@@ -91,7 +91,7 @@ function get_projects_by_search($name, $creator, $date){
     //Execute query
     $result = mysqli_query($connection, $query);
 
-    //Check row
+    //Check result
     if($result){
         //Fetch rows
         while($row = mysqli_fetch_assoc($result)){

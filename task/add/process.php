@@ -33,6 +33,7 @@ $dateEnd = prepare_field_datetime($_POST['date-end']);
 $timeStart = prepare_field_datetime($_POST['time-start']);
 $timeEnd = prepare_field_datetime($_POST['time-end']);
 
+//Validate form
 validate_form($name, $description, $projectId, $dateStart, $dateEnd, $timeStart, $timeEnd);
 
 //Check if there are any errors
@@ -53,20 +54,21 @@ function prepare_field($field)
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
+//Preparing datetime fields for database without SQL Injection
 function prepare_field_datetime($field){
     return trim(preg_replace("/[<>&=%'“]/i", "", $field));
 }
 
-//Function to check if user has access to this project
+//Function to check if user has access to selected project
 function check_project_access($projectId){
 
     global $connection;
     global $errors;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that checks if user has access to selected project
     $query = "SELECT * FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id
               WHERE p.id = '$projectId' AND up.user_id = '$userId'";
@@ -100,7 +102,7 @@ function save_project_task($name, $description, $projectId){
     $query = "INSERT INTO task_table (name, description, status, created_by, project_id)
               VALUES ('$name', '$description', 'NOT_STARTED', '$user', '$projectId')";
 
-    //Check if there is any errors
+    //Check if there are any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
     }
@@ -122,7 +124,6 @@ function save_project_task_timestamp($name, $description, $projectId, $timestamp
     $query = "INSERT INTO task_table (name, description, status, created_by, project_id, date_start, date_end)
     VALUES ('$name', '$description', 'NOT_STARTED', '$user', '$projectId', '$timestampStart', '$timestampEnd')";
 
- 
     //Check if there is any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
@@ -144,7 +145,7 @@ function update_project($projectId){
     //Query for updating project
     $query = "UPDATE project_table SET updated_by = '$user' WHERE id = $projectId";
 
-    //Check if there is any errors
+    //Check if there are any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
     }

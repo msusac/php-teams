@@ -5,7 +5,7 @@ session_start();
 
 define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
 
-if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
+if ($_SESSION['$userRole'] != 'ROLE_ADMIN') {
     header('Location: /php-teams');
 }
 ?>
@@ -22,7 +22,7 @@ if ($_SESSION['$user_role'] != 'ROLE_ADMIN') {
     <?php include(APP_ROOT . 'templates/header.php') ?>
 
     <main class="container">
-        <section>
+        <section id="section-table">
             <div class="row center-align">
                 <h5>User table</h5>
             </div>

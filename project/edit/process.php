@@ -24,6 +24,7 @@ if(!isset($_SESSION['$user'])){
     exit();
 }
 
+//Prepare fields
 $name = prepare_field($_POST['name']);
 $description = prepare_field($_POST['description']);
 $image = $_FILES['image']['name'];
@@ -50,16 +51,16 @@ function prepare_field($field)
     return trim(preg_replace("/[<>&=%:'“]/i", "", $field));
 }
 
-//Function for checking user acess to this project
+//Function for checking user access to selected project
 function check_project_access($projectId, $name, $description, $image){
 
     global $connection;
     global $errors;
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that check if user is creator of selected project
     $query = "SELECT * FROM project_table p
               INNER JOIN user_project_table up ON up.project_id = p.id
               WHERE p.id = '$projectId' AND up.user_id = '$userId' AND up.role = 'CREATOR'";
@@ -147,12 +148,12 @@ function update_user_project($projectId, $name){
     global $connection;
     global $errors;
 
-    //Query for updating project
+    //Query for updating user_project_table
     $query = "UPDATE user_project_table 
         SET project = '$name'
         WHERE project_id = '$projectId'";
 
-    //Check if there is any errors
+    //Check if there are any errors
     if(!$result = mysqli_query($connection, $query)){
         $errors['sql'] = mysqli_error($connection);
     }

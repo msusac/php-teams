@@ -8,8 +8,8 @@
                 if (isset($_SESSION['$user'])) {
                     echo '<li><a class="waves-effect" href="/php-teams/project">Projects</a></li>
                                 <li><a class="waves-effect" href="/php-teams/task">Tasks</a></li>
-                                <li><a class="waves-effect" href="#">Requests</a></li>';
-                    if ($_SESSION['$user_role'] == 'ROLE_ADMIN') {
+                                <li><a class="waves-effect" href="/php-teams/request">Requests <span id="request-pending-count"></span></a></li>';
+                    if ($_SESSION['$userRole'] == 'ROLE_ADMIN') {
                         echo '<li><a class="waves-effect" href="/php-teams/user">Users <span id="user-not-activated-count"></span></a></li>';
                     }
                 }
@@ -38,10 +38,10 @@
         if (isset($_SESSION['$user'])) {
             echo '<li><a class="waves-effect" href="/php-teams/project"><i class="material-icons">computer</i> Projects</a></li>
             <li><a class="waves-effect" href="/php-teams/task"><i class="material-icons">assignment</i> Tasks</a></li>
-            <li><a class="waves-effect" href="#"><i class="material-icons">notifications</i> Requests</a></li>
+            <li><a class="waves-effect" href="/php-teams/request"><i class="material-icons">notifications</i> Requests <span id="request-pending-count"></span></a></li>
             <li><div class="divider"></div></li>';
 
-            if ($_SESSION['$user_role'] == 'ROLE_ADMIN') {
+            if ($_SESSION['$userRole'] == 'ROLE_ADMIN') {
                 echo '<li><a class="waves-effect" href="/php-teams/user"><i class="material-icons">group</i> Users <span id="user-not-activated-count"></span></a></li>
                 <li><div class="divider"></div></li>';
             }

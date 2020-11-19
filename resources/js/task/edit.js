@@ -193,6 +193,7 @@ function editTask() {
         .done(function (data) {
             if (data.success) {
                 //Update field(s)
+                $("#modal-task-edit #projectHiddenId").remove();
                 $("#modal-task-edit #taskHiddenId").remove();
                 $('#form-task-edit div').after(data.content);
 

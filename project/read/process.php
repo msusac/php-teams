@@ -16,7 +16,6 @@ if(!isset($_SESSION['$user']) || empty($_SESSION['$user'])){
     $data['success'] = false;
     $data['errors']  = $errors;
 
-    echo($_SESSION['$user']);
     echo json_encode($data);
     exit();
 }
@@ -43,7 +42,7 @@ if (!empty($errors)) {
 //Return all data to an AJAX call
 echo json_encode($data);
 
-//Function for checking user acess to this project
+//Function for checking user access to selected project
 function check_project_access($projectId){
 
     global $connection;
@@ -54,9 +53,9 @@ function check_project_access($projectId){
     $data['content'] = '';
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
 
-    //Query that check if user exists in database
+    //Query that checks if user has access to selected project
     $query = "SELECT p.id AS id, p.name AS name, p.created_by AS createdBy, p.updated_by AS updatedBy,
               p.date_created AS createdOn, p.date_updated AS updatedOn, p.image As image, 
               p.description AS description, up.role AS role
@@ -128,7 +127,7 @@ function check_project_access($projectId){
             //Get project members
             get_project_members($projectId);
 
-            //Add edit and delete button if user if creator of project
+            //Add edit and delete button if user is creator of selected project
             if($row['role'] == 'CREATOR'){
                 $data['content'] .= '<div class="row center-align">
                     <a class="modal-action waves-effect btn brand blue" onclick="editProject()">Edit</a>
@@ -155,7 +154,7 @@ function get_project_members($projectId){
     global $data;
     global $errors;
 
-    //Query that check if user exists in database
+    //Query that check if user is member of selected project
     $query = "SELECT user_id AS id, user, role FROM user_project_table
               WHERE project_id = '$projectId'
               ORDER BY user ASC, role ASC";

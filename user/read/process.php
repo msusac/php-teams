@@ -133,12 +133,12 @@ function get_user_by_username($username)
             //User actions
             $data['table'] .= '<tr><td><b>Actions</b></td><td>';
 
-            //Check if profile belogns to logged user
+            //Check if profile belongs to logged user
             if ($_SESSION['$user'] == $row['username'])
                 $data['table'] .='<a class="modal-action waves-effect btn brand blue" href="#" onclick="editUser()">Edit</a>';
 
-            //Add button for activating user
-            if ($_SESSION['$user_role'] == 'ROLE_ADMIN' && empty($row['role'])){
+            //Add button for activating user, ADMIN ONLY
+            if ($_SESSION['$userRole'] == 'ROLE_ADMIN' && empty($row['role'])){
                 $data['table'] .='<a class="modal-action waves-effect btn brand green" href="#" onclick="activateUser(\'' . $row['username'] . '\')">Activate</a>';
             }
             

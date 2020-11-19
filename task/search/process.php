@@ -122,14 +122,14 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
     }
 
     //Check project status
-    if(!empty($status)){
+    if(in_array($status, array('NOT_STARTED', 'IN_PROGRESS', 'DONE', 'REVERSED'))){
         $query_where_status = "AND t.status = '$status' ";
     }
 
     //Get user id
-    $userId = $_SESSION['$user_id'];
+    $userId = $_SESSION['$userId'];
     
-    //Query that check if user exists in database
+    //Query that searches project tasks
     $query = "SELECT t.id AS id, t.name AS task, t.status AS status,
               t.date_created AS createdOn, t.date_updated AS updatedOn,
               p.name AS project, p.id AS projectId,
