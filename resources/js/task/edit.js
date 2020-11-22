@@ -31,7 +31,6 @@ $(document).ready(function () {
 
                     $('#form-task-edit :input[name="name"]').val(data.name);
                     $('#form-task-edit #description').val(data.description);
-                    $('#form-task-edit #status-label').text('(' + data.status + ')');
 
                     if(data.dateStart){
                         $('#form-task-edit input[name="date-start"]').val(data.dateStart);
@@ -112,12 +111,6 @@ $(document).ready(function () {
 
                         //Read Task Modal
                         readTask(id);
-
-                        //Update fields
-                        $('#form-task-edit #status-label').text('(' + data.status + ')');
-        
-                        $('#form-task-edit select').prop("selectedIndex", 0);
-                        $('#form-task-edit select').formSelect();
                     }
                 }
                 //Show validation errors
@@ -199,9 +192,8 @@ function editTask() {
 
                 $('#form-task-edit :input[name="name"]').val(data.name);
                 $('#form-task-edit #description').val(data.description);
-                $('#form-task-edit #status-label').text('(' + data.status + ')');
 
-                $('#form-task-edit select').prop("selectedIndex", 0);
+                $('#form-task-edit select').val(data.status);
                 $('#form-task-edit select').formSelect();
 
                 if(data.dateStart){

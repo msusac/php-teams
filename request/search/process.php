@@ -39,7 +39,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Search sucessfull!';
+    $data['message'] = 'Search sucessful!';
 }
 
 //Return all data to an AJAX call
@@ -89,36 +89,45 @@ function get_requests_by_search($name, $status, $date, $mailbox){
     //Initialize where request status
     $query_where_status = "";
 
+    //Initialize date array
+    $dateArray = array('DATE_SEND_ASC', 'DATE_SEND_DESC', 'DATE_REPLY_ASC', 'DATE_REPLY_DESC');
+
     //Check sort-by date
-    if($date == 'DATE_SEND_ASC'){
+    if($date == $dateArray[0]){
         $query_order_by .= "ORDER BY r.date_send ASC ";
     }
-    else if($date == 'DATE_SEND_DESC'){
+    else if($date == $dateArray[1]){
         $query_order_by .= "ORDER BY r.date_send DESC ";
     }
-    else if($date == 'DATE_REPLY_ASC'){
+    else if($date == $dateArray[2]){
         $query_order_by .= "ORDER BY r.date_reply ASC ";
     }
-    else if($date == 'DATE_REPLY_DESC'){
+    else if($date == $dateArray[3]){
         $query_order_by .= "ORDER BY r.date_reply DESC ";
     }
 
     //Get user id
     $userId = $_SESSION['$userId'];
 
+    //Initialize mailbox array
+    $mailboxArray = array('INBOX', 'OUTBOX');
+
     //Check mailbox
-    if($mailbox == 'INBOX'){
+    if($mailbox == $mailboxArray[0]){
         $query_where_mailbox = "AND r.user_to_id = '$userId' ";
     }
-    else if($mailbox == 'OUTBOX'){
+    else if($mailbox == $mailboxArray[1]){
         $query_where_mailbox = "AND r.user_from_id = '$userId' ";
     }
     else{
         $query_where_mailbox = "AND (r.user_from_id = '$userId' OR r.user_to_id = '$userId') ";
     }
 
+    //Initialize status array
+    $statusArray = array('PENDING', 'ACCEPTED', 'REJECTED');
+
     //Check request status
-    if(in_array($status, array('PENDING', 'ACCEPTED', 'REJECTED'))){
+    if(in_array($status, $statusArray)){
         $query_where_status = "AND r.status = '$status' ";
     }
 

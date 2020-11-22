@@ -24,7 +24,7 @@ if ($_SESSION['$userRole'] != 'ROLE_ADMIN') {
     <main class="container">
         <section id="section-table">
             <div class="row center-align">
-                <h5>User table</h5>
+                <h4>Users table</h4>
             </div>
             <div class="row">
                 <form class="col s12" method="POST" action="process.php" id="form-users-search">
@@ -53,6 +53,14 @@ if ($_SESSION['$userRole'] != 'ROLE_ADMIN') {
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="row center-align">
+                <h4><span id="total-reg"></span></h4>
+            </div>
+            <div class="row center-align">
+                <div class="col-md-12 center text-center">
+                    <ul class="pagination pager"></ul>
+                </div>
             </div>
             <div class="row">
                 <table id="table-users" class="highlight responsive-table centered">

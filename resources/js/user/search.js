@@ -1,3 +1,5 @@
+import { paginateTable } from '../other/header.js';
+
 $(document).ready(function () {
 
     //Show default results upon loading page if users table is present
@@ -46,6 +48,9 @@ export function searchUsersTable(formData) {
             if (data.success) {
                 //Show data table
                 $("#table-users tbody").html(data.table);
+
+                //Paginate Users table
+                paginateTable();
             }
             //Show validation errors
             else {

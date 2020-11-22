@@ -12,15 +12,11 @@ if (!isset($_SESSION['$user'])) {
 //Check connection with database
 include('../config/db_connect.php');
 
-//Project selection 
-$projectSelect = Array();
-
-//User selection
-$userSelect = Array();
-
 //Get user id
 $userId = $_SESSION['$userId'];
 
+//Project selection 
+$projectSelect = array();
 
 //Query to get all projects that belong to user
 $query = "SELECT p.id AS id, p.name AS name
@@ -36,9 +32,12 @@ $result = mysqli_query($connection, $query);
 if($result){
     //Fetch rows
     while($row = mysqli_fetch_assoc($result)){
-        $projectSelect[] = Array('id' => $row['id'], 'name' => $row['name']);
+        $projectSelect[] = array('id' => $row['id'], 'name' => $row['name']);
     }
 }
+
+//User selection
+$userSelect = array();
 
 //Query to get all users
 $query = "SELECT u.id AS id, u.username AS name
@@ -55,7 +54,7 @@ $result = mysqli_query($connection, $query);
 if($result){
     //Fetch rows
     while($row = mysqli_fetch_assoc($result)){
-        $userSelect[] = Array('id' => $row['id'], 'name' => $row['name']);
+        $userSelect[] = array('id' => $row['id'], 'name' => $row['name']);
     }
 }
 
@@ -119,6 +118,14 @@ mysqli_close($connection);
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="row center-align">
+                <h4><span id="total-reg"></span></h4>
+            </div>
+            <div class="row center-align">
+                <div class="col-md-12 center text-center">
+                    <ul class="pagination pager"></ul>
+                </div>
             </div>
             <div class="row">
                 <table id="table-requests" class="highlight responsive-table centered">

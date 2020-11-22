@@ -13,7 +13,7 @@ if (!isset($_SESSION['$user'])) {
 include('../config/db_connect.php');
 
 //Project selection 
-$projectSelect = Array();
+$projectSelect = array();
 
 //Get user id
 $userId = $_SESSION['$userId'];
@@ -29,10 +29,10 @@ $query = "SELECT p.id AS id, p.name AS name
 $result = mysqli_query($connection, $query);
 
 //Check row
-if($result){
+if ($result) {
     //Fetch rows
-    while($row = mysqli_fetch_assoc($result)){
-        $projectSelect[] = Array('id' => $row['id'], 'name' => $row['name']);
+    while ($row = mysqli_fetch_assoc($result)) {
+        $projectSelect[] = array('id' => $row['id'], 'name' => $row['name']);
     }
 }
 
@@ -67,10 +67,10 @@ mysqli_close($connection);
                             <select name="project" id="project">
                                 <option value="" selected>Select Project</option>
                                 <?php
-                                    //Prepare options fields
-                                    foreach($projectSelect as $project){
-                                        echo '<option value="'.$project['id'].'">'.$project['name'].' - '.$project['id'].'</option>';
-                                    }
+                                //Prepare options fields
+                                foreach ($projectSelect as $project) {
+                                    echo '<option value="' . $project['id'] . '">' . $project['name'] . ' - ' . $project['id'] . '</option>';
+                                }
                                 ?>
                             </select>
                         </div>
@@ -99,6 +99,7 @@ mysqli_close($connection);
                                 <option value="DAYS_START_DESC">Days Start - Descending</option>
                                 <option value="DAYS_END_ASC">Days End - Ascending</option>
                                 <option value="DAYS_END_DESC">Days End - Descending</option>
+                                <option value="EXPIRED">Expired</option>
                             </select>
                         </div>
                     </div>
@@ -110,6 +111,14 @@ mysqli_close($connection);
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="row center-align">
+                <h4><span id="total-reg"></span></h4>
+            </div>
+            <div class="row center-align">
+                <div class="col-md-12 center text-center">
+                    <ul class="pagination pager"></ul>
+                </div>
             </div>
             <div class="row">
                 <table id="table-tasks" class="highlight responsive-table centered">

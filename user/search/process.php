@@ -38,7 +38,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Search sucessfull!';
+    $data['message'] = 'Search successful!';
 }
 
 //Return all data to an AJAX call
@@ -63,14 +63,17 @@ function get_users_by_search($username, $email, $role){
     //Initialize where query
     $query_where = '';
 
+    //Initialize role array
+    $roleArray = array('ADMIN', 'USER', 'NOT_ACTIVATED');
+
     //Check if role is admin, user or null
-    if($role == 'ADMIN'){
+    if($role == $roleArray[0]){
         $query_where = "AND a.name = 'ROLE_ADMIN' ";
     }
-    else if($role == 'USER'){
+    else if($role == $roleArray[1]){
         $query_where = "AND a.name = 'ROLE_USER' ";
     }
-    else if($role == 'NOT_ACTIVATED'){
+    else if($role == $roleArray[2]){
         $query_where = "AND a.name IS null ";
     }
 

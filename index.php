@@ -19,6 +19,131 @@ define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
     <?php include(APP_ROOT . 'templates/header.php') ?>
 
     <main class="container">
+        <?php
+            //Display project tasks that are about to expire
+
+            //Check connection with database
+            include('config/db_connect.php');
+
+            //Check user access
+            if(isset($_SESSION['$user'])){
+
+                //Get user id
+                $userId = $_SESSION['$userId'];
+
+                //Query that searches timed project tasks that are not completed yet
+                $query = "SELECT t.id AS id, t.name AS task, t.status AS status,
+                          t.date_end AS dateEnd, p.name AS project, p.id AS projectId,
+                          DATEDIFF(t.date_end, now()) as daysEnd
+                          FROM task_table t
+                          INNER JOIN project_table p ON p.id = t.project_id
+                          INNER JOIN user_project_table up ON up.project_id = p.id
+                          WHERE up.user_id = '$userId' AND t.status != 'DONE'
+                          HAVING daysEnd BETWEEN 1 AND 9
+                          ORDER BY daysEnd ASC";
+
+                //Execute query
+                $result = mysqli_query($connection, $query);
+
+                //Check result
+                if($result){
+                    $numRows = mysqli_num_rows($result);
+
+                    if($numRows > 0){
+                        echo '<section>
+                                <div class="row center-align">
+                                    <h4>Reminder for the following tasks that needs to be completed within next days!</h4>
+                                    <table id="table-tasks" class="highlight responsive-table centered">
+                                        <thead>
+                                            <th>Task</th>
+                                            <th>Project</th>
+                                            <th>Status</th>
+                                            <th>End Date</th>
+                                            <th>Ends On</th>
+                                        </thead>
+                                        <tbody>';
+                        
+                        while($row = mysqli_fetch_assoc($result)){
+                            echo '<tr>';
+                                echo '<td>'. $row['task'] . ' - '. $row['id'] .'</td>';
+                                echo '<td>'. $row['project'] . ' - '. $row['projectId'] .'</td>';
+                                echo '<td>'. preg_replace("/_/i", " ", $row['status']) .'</td>';
+                                echo '<td>'. $row['daysEnd'] . ' ' .'day(s)</td>';
+
+                                $date = strtotime($row['dateEnd']);
+                                echo '<td>' . date("d/m/Y H:i", $date) . '</td>';
+
+                            echo '</tr>';
+                        }
+
+                        echo '<div class="row center-align">
+                                <div class="col-md-12 center text-center">
+                                    <ul class="pagination pager"></ul>
+                                </div>
+                             </div>';
+
+                        echo '</tbody></table></div></section>';
+                    }
+                }
+
+                //Display expired project tasks
+
+                //Query that searches uncompleted project tasks that have expired
+                $query = "SELECT t.id AS id, t.name AS task, t.status AS status,
+                p.name AS project, p.id AS projectId, t.date_end AS dateEnd,
+                DATEDIFF(t.date_end, now()) as daysEnd
+                FROM task_table t
+                INNER JOIN project_table p ON p.id = t.project_id
+                INNER JOIN user_project_table up ON up.project_id = p.id
+                WHERE up.user_id = '$userId' AND t.status != 'DONE'
+                HAVING daysEnd BETWEEN -5 AND 0
+                ORDER BY daysEnd ASC";
+
+                //Execute query
+                $result = mysqli_query($connection, $query);
+
+                //Check result
+                if($result){
+                    $numRows = mysqli_num_rows($result);
+
+                    if($numRows > 0){
+                        echo '<section>
+                                <div class="row center-align">
+                                    <h4>Reminder for expired tasks that are not completed!</h4>
+                                    <table id="table-tasks" class="highlight responsive-table centered">
+                                        <thead>
+                                            <th>Task</th>
+                                            <th>Project</th>
+                                            <th>Status</th>
+                                            <th>Expired On</th>
+                                        </thead>
+                                        <tbody>';
+                        
+                        while($row = mysqli_fetch_assoc($result)){
+                            echo '<tr>';
+                                echo '<td>'. $row['task'] . ' - '. $row['id'] .'</td>';
+                                echo '<td>'. $row['project'] . ' - '. $row['projectId'] .'</td>';
+                                echo '<td>'. preg_replace("/_/i", " ", $row['status']) .'</td>';
+
+                                $date = strtotime($row['dateEnd']);
+                                echo '<td>' . date("d/m/Y H:i", $date) . '</td>';
+                            echo '</tr>';
+                        }
+
+                        echo '<div class="row center-align">
+                                <div class="col-md-12 center text-center">
+                                    <ul class="pagination pager"></ul>
+                                </div>
+                            </div>';
+
+                        echo '</tbody></table></div></section>';
+                    }
+                }
+            }
+
+            //Close connection
+            mysqli_close($connection);
+        ?>
         <section>
             <div class="row">
                 <div class="slider">
@@ -114,6 +239,7 @@ define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
     </main>
 
     <?php include(APP_ROOT . 'templates/footer.php') ?>
+    <script type="module" src="/php-teams/resources/js/other/main.js"></script>
 </body>
 
 </html>

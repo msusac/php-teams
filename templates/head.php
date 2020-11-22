@@ -10,10 +10,5 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
-<script src="/php-teams/resources/js/other/datepicker.js"></script>
-<script src="/php-teams/resources/js/other/modal.js"></script>
-<script src="/php-teams/resources/js/other/select.js"></script>
-<script src="/php-teams/resources/js/other/sidenav.js"></script>
-<script src="/php-teams/resources/js/other/slider.js"></script>
-<script src="/php-teams/resources/js/other/timepicker.js"></script>
 <script type="module" src="/php-teams/resources/js/other/header.js"></script>
+<script src="/php-teams/resources/js/other/pagination.js"></script>

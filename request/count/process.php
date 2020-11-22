@@ -33,7 +33,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'User sucessfully activated!';
+    $data['message'] = 'Successfully retrieved request count!';
 }
 
 //Return all data to an AJAX call

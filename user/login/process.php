@@ -37,7 +37,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Login sucessfull! Please wait!';
+    $data['message'] = 'Login sucessful! Please wait!';
 }
 
 //Return all data to an AJAX call
