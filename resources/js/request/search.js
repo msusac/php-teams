@@ -49,7 +49,7 @@ export function searchRequestsTable(formData) {
                 $("#table-requests tbody").html(data.table);
 
                 //Paginate tasks table
-                paginateTable();
+                paginateTable('#table-requests');
             }
              //Show validation errors
             else {

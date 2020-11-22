@@ -50,7 +50,7 @@ export function searchUsersTable(formData) {
                 $("#table-users tbody").html(data.table);
 
                 //Paginate Users table
-                paginateTable();
+                paginateTable('#table-users');
             }
             //Show validation errors
             else {
