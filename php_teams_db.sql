@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 19, 2020 at 08:18 PM
+-- Generation Time: Nov 22, 2020 at 07:58 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -66,7 +66,7 @@ INSERT INTO `project_table` (`id`, `name`, `description`, `created_by`, `updated
 (2, 'Testuser Project Second', 'Testuser Project Second', 'testuser', NULL, '2020-11-19 17:36:40', NULL, 'tumblr_mw3hfwEsBz1s8xkbjo1_500.jpg'),
 (3, 'Admin Hotel', 'Admin Hotel', 'administrator', 'administrator', '2020-11-19 17:44:10', '2020-11-19 17:46:15', 'tumblr_oq06mlSBM11vubw39o1_500.gif'),
 (4, 'Web Shop', 'Web Shop', 'administrator', 'administrator', '2020-11-19 17:44:30', '2020-11-19 18:00:16', ''),
-(5, 'Admins Garden Project', 'Add tomato!', 'administrator', 'testuser', '2020-11-19 17:44:55', '2020-11-19 18:03:59', 'tumblr_mw3hfwEsBz1s8xkbjo1_500.jpg');
+(5, 'Admins Garden Project', 'Add tomato!', 'administrator', 'administrator', '2020-11-19 17:44:55', '2020-11-21 12:29:07', 'tumblr_mw3hfwEsBz1s8xkbjo1_500.jpg');
 
 -- --------------------------------------------------------
 
@@ -122,10 +122,12 @@ CREATE TABLE `task_table` (
 
 INSERT INTO `task_table` (`id`, `name`, `description`, `status`, `created_by`, `updated_by`, `date_start`, `date_end`, `date_created`, `date_updated`, `project_id`) VALUES
 (1, 'Bulding Hotel', 'Empty Description', 'REVERSED', 'administrator', 'administrator', NULL, NULL, '2020-11-19 17:46:15', '2020-11-19 17:56:26', 3),
-(2, 'Building Garden', 'Add Tomato!', 'NOT_STARTED', 'administrator', NULL, '2020-11-16 18:56:00', '2020-11-30 06:00:00', '2020-11-19 17:57:24', NULL, 5),
-(3, 'Bulding Water Sink', 'Bulding Water Sink\r\nHello!', 'IN_PROGRESS', 'administrator', 'testuser', NULL, NULL, '2020-11-19 17:58:09', '2020-11-19 18:04:15', 5),
-(4, 'Web Shop Preparations', 'Web Shop Preparations', 'NOT_STARTED', 'administrator', NULL, '2020-11-30 00:00:00', '2020-12-31 00:00:00', '2020-11-19 18:00:16', NULL, 4),
-(5, 'Building Front', 'Building Front', 'NOT_STARTED', 'testuser', NULL, NULL, NULL, '2020-11-19 18:03:59', NULL, 5);
+(2, 'Building Garden', 'Add Tomato!', 'DONE', 'administrator', 'administrator', '2020-11-16 18:56:00', '2020-11-30 06:00:00', '2020-11-19 17:57:24', '2020-11-22 15:06:23', 5),
+(3, 'Bulding Water Sink', 'Bulding Water Sink\r\nHello!', 'IN_PROGRESS', 'administrator', 'testuser', '2020-11-20 19:43:57', '2020-11-21 15:47:38', '2020-11-19 17:58:09', '2020-11-22 18:52:56', 5),
+(4, 'Web Shop Preparations', 'Web Shop Preparations', 'NOT_STARTED', 'administrator', 'administrator', '2020-11-23 18:25:00', '2020-12-31 00:00:00', '2020-11-19 18:00:16', '2020-11-22 13:13:17', 4),
+(5, 'Building Front', 'Building Front', 'NOT_STARTED', 'testuser', 'administrator', '2020-11-25 18:00:00', '2020-11-30 00:30:00', '2020-11-19 18:03:59', '2020-11-22 13:14:13', 5),
+(7, 'First Project Task', 'First Project Task', 'NOT_STARTED', 'testuser', NULL, '2020-11-22 00:25:00', '2020-11-25 18:00:00', '2020-11-21 14:07:02', NULL, 1),
+(8, 'Web Shop Preparations', 'Web Shop Preparations', 'NOT_STARTED', 'administrator', NULL, NULL, NULL, '2020-11-22 15:46:29', NULL, 4);
 
 -- --------------------------------------------------------
 
@@ -195,7 +197,7 @@ CREATE TABLE `user_table` (
 --
 
 INSERT INTO `user_table` (`id`, `username`, `email`, `fullname`, `password`, `date_created`) VALUES
-(1, 'administrator', 'admin@admin.com', 'Mr. Admin O', '200ceb26807d6bf99fd6f4f0d1ca54d4', '2020-10-31 20:13:22'),
+(1, 'administrator', 'admin@admin.com', 'Mr. Admin', '200ceb26807d6bf99fd6f4f0d1ca54d4', '2020-10-31 20:13:22'),
 (2, 'testuser', 'test@test.com', NULL, '5d9c68c6c50ed3d02a2fcf54f63993b6', '2020-11-19 17:29:40'),
 (3, 'testuser2', 'test2@test.com', NULL, '58dd024d49e1d1b83a5d307f09f32734', '2020-11-19 17:33:22'),
 (4, 'testuser3', 'test3@test.com', NULL, '1e4332f65a7a921075fbfb92c7c60cce', '2020-11-19 17:33:30'),
@@ -270,25 +272,25 @@ ALTER TABLE `authority_table`
 -- AUTO_INCREMENT for table `project_table`
 --
 ALTER TABLE `project_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `request_table`
 --
 ALTER TABLE `request_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `task_table`
 --
 ALTER TABLE `task_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `user_table`
 --
 ALTER TABLE `user_table`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
