@@ -9,7 +9,7 @@
     
     //Initialize data field
     $data['success'] = true;
-    $data['message'] = 'Logout sucessfull! Please wait!';
+    $data['message'] = 'Logout sucessful! Please wait!';
 
     //Return all data to an AJAX call
     echo json_encode($data);

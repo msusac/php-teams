@@ -56,6 +56,14 @@ if (!isset($_SESSION['$user'])) {
                     </div>
                 </form>
             </div>
+            <div class="row center-align">
+                <h4><span id="total-reg"></span></h4>
+            </div>
+            <div class="row center-align">
+                <div class="col-md-12 center text-center">
+                    <ul class="pagination pager"></ul>
+                </div>
+            </div>
             <div class="row">
                 <table id="table-projects" class="highlight responsive-table centered">
                     <thead>

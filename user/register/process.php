@@ -40,7 +40,7 @@ if (!empty($errors)) {
 } 
 else {
     $data['success'] = true;
-    $data['message'] = 'Registration sucessfull! Your account will be activated soon!';
+    $data['message'] = 'Registration successful! Your account will be activated soon!';
 }
 
 //Return all data to an AJAX call

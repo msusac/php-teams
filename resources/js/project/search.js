@@ -1,3 +1,5 @@
+import { paginateTable } from '../other/header.js';
+
 $(document).ready(function () {
 
     //Show default results upon loading page if projects table is present
@@ -45,6 +47,9 @@ export function searchProjectsTable(formData) {
             if (data.success) {
                 //Show data table
                 $("#table-projects tbody").html(data.table);
+
+                //Paginate Projects table
+                paginateTable();
             }
              //Show validation errors
             else {

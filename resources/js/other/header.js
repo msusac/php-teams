@@ -1,5 +1,31 @@
 $(document).ready(function () {
 
+    //Initialize datepciker
+    $('.datepicker').datepicker({
+        format: 'dd/mm/yyyy',
+        showClearBtn: true
+    });
+
+    //Initialize modal
+    $('.modal').modal({
+        dismissible: false
+    });
+
+    //Initialize select
+    $('select').formSelect();
+
+    //Initialize sidenav
+    $('.sidenav').sidenav();
+
+    //Initialize slider
+    $('.slider').slider();
+
+    //Initialize timepicker
+    $('.timepicker').timepicker({
+        showClearBtn: true,
+        twelveHour: false
+    });
+
     countNotActivatedUsers();
     countPendingRequests();
 });
@@ -58,5 +84,21 @@ export function countPendingRequests(){
         });
 }
 
+//Function to paginate table
+export function paginateTable(){
+    $('.pager').empty();
+
+    $('table').pageMe({
+        pagerSelector: '.pager',
+        activeColor: 'blue',
+        prevText: 'Anterior',
+        nextText: 'Siguiente',
+        showPrevNext: true,
+        hidePageNumbers: false,
+        perPage: 5
+    });
+}
+
 window.countNotActivatedUsers = countNotActivatedUsers;
 window.countPendingRequests = countPendingRequests;
+window.paginateTable = paginateTable;

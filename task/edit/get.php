@@ -88,7 +88,7 @@ function check_project_task_access($taskId){
             $data['project'] = $row['project'] . ' - ' . $row['projectId'];
 
             //Project task status
-            $data['status'] = preg_replace("/_/i", " ", $row['status']);
+            $data['status'] = $row['status'];
 
             //Description
             $data['description'] = $row['description'];

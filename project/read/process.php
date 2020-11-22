@@ -157,7 +157,7 @@ function get_project_members($projectId){
     //Query that check if user is member of selected project
     $query = "SELECT user_id AS id, user, role FROM user_project_table
               WHERE project_id = '$projectId'
-              ORDER BY user ASC, role ASC";
+              ORDER BY role ASC, user ASC";
     
     //Execute query
     $result = mysqli_query($connection, $query);

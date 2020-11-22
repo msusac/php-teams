@@ -40,7 +40,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Search sucessfull!';
+    $data['message'] = 'Search sucessful!';
 }
 
 //Return all data to an AJAX call
@@ -65,8 +65,8 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
     //Initialize order by query 
     $query_order_by = "";
 
-    //Initialize where days
-    $query_where_days = "";
+    //Initialize having days
+    $query_having_days = "";
 
     //Initialize where project task status
     $query_where_status = "";
@@ -74,46 +74,56 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
     //Initialize where project id
     $query_where_project_id = "";
 
+    //Initialize date array
+    $dateArray = array('DATE_CREATED_ASC', 'DATE_CREATED_DESC', 'DATE_UPDATED_ASC', 'DATE_UPDATED_DESC');
+
+    //Initialize days remaining array
+    $daysArray = array('DAYS_START_ASC', 'DAYS_START_DESC', 'DAYS_END_ASC', 'DAYS_END_DESC', 'EXPIRED');
+
     //Check sort-by date and days
-    if(!empty($date) || !empty($days)){
+    if(in_array($date, $dateArray) || in_array($days, $daysArray) ){
         $query_order_by .= "ORDER BY ";
     }
 
     //Check sort-by date
-    if($date == 'DATE_CREATED_ASC'){
+    if($date == $dateArray[0]){
         $query_order_by .= "t.date_created ASC ";
     }
-    else if($date == 'DATE_CREATED_DESC'){
+    else if($date == $dateArray[1]){
         $query_order_by .= "t.date_created DESC ";
     }
-    else if($date == 'DATE_UPDATED_ASC'){
+    else if($date == $dateArray[2]){
         $query_order_by .= "t.date_updated ASC ";
     }
-    else if($date == 'DATE_UPDATED_DESC'){
+    else if($date == $dateArray[3]){
         $query_order_by .= "t.date_updated DESC ";
     }
 
     //Check sort-by date and days
-    if(!empty($date) && !empty($days)){
+    if(in_array($date, $dateArray) && in_array($days, $daysArray)){
         $query_order_by .= ", ";
     }
 
     //Check sort-by days
-    if($days == 'DAYS_START_ASC'){
-        $query_where_days = "AND DATEDIFF(t.date_start, now()) > 0 ";
+    if($days == $daysArray[0]){
+        $query_having_days = "HAVING daysStart > 0 ";
         $query_order_by .= "daysStart ASC ";
     }
-    else if($days == 'DAYS_START_DESC'){
-        $query_where_days = "AND DATEDIFF(t.date_start, now()) > 0 ";
+    else if($days == $daysArray[1]){
+        $query_having_days = "HAVING daysStart > 0 ";
         $query_order_by .= "daysStart DESC ";
     }
-    else if($days == 'DAYS_END_ASC'){
-        $query_where_days = "AND DATEDIFF(t.date_end, now()) >= -2 ";
+    else if($days == $daysArray[2]){
+        $query_having_days = "HAVING daysStart <= 0 AND daysEnd > 0 ";
         $query_order_by .= "daysEnd ASC ";
     }
-    else if($days == 'DAYS_END_DESC'){
-        $query_where_days = "AND DATEDIFF(t.date_end, now()) >= -2 ";
+    else if($days == $daysArray[3]){
+        $query_having_days = "HAVING daysStart <= 0 AND daysEnd > 0 ";
         $query_order_by .= "daysEnd DESC ";
+    }
+    else if($days == $daysArray[4]){
+        $query_having_days = "HAVING daysStart <= 0 AND daysEnd <= 0 ";
+        $query_order_by .= "daysEnd ASC ";
     }
 
     //Check project id
@@ -121,8 +131,11 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
         $query_where_project_id = "AND t.project_id = '$projectId' ";
     }
 
+    //Initialize status array
+    $statusArray = array('NOT_STARTED', 'IN_PROGRESS', 'DONE', 'REVERSED');
+
     //Check project status
-    if(in_array($status, array('NOT_STARTED', 'IN_PROGRESS', 'DONE', 'REVERSED'))){
+    if(in_array($status, $statusArray)){
         $query_where_status = "AND t.status = '$status' ";
     }
 
@@ -141,7 +154,7 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
               WHERE up.user_id = '$userId' AND t.name LIKE '%$name%' "
               . $query_where_project_id
               . $query_where_status
-              . $query_where_days
+              . $query_having_days
               . $query_order_by;
 
     //Execute query
@@ -169,16 +182,17 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
 
             $data['table'] .= '<td>' . $status . '</td>';
 
-
             //Remaining days
-            if(!empty($row['daysStart']) && $row['daysStart'] > 0){
-                $data['table'] .= '<td>Starts in '. $row['daysStart']. ' day(s)</td>';
-            }
-            else if(!empty($row['daysEnd']) && $row['daysEnd'] > 0){
-                $data['table'] .= '<td>Ends in '. $row['daysEnd']. ' day(s)</td>';
-            }
-            else if(!empty($row['daysEnd']) && $row['daysEnd'] <= 0){
-                $data['table'] .= $data['table'] .= '<td>Expired</td>';
+            if(!empty($row['daysStart']) && !empty($row['daysEnd'])){
+                if($row['daysStart'] <= 0 && $row['daysEnd'] > 0){
+                    $data['table'] .= '<td>Ends in '. $row['daysEnd']. ' day(s)</td>';
+                }
+                else if($row['daysStart'] <= 0 && $row['daysEnd'] <= 0){
+                    $data['table'] .= '<td>Expired</td>';
+                }
+                else if($row['daysStart'] > 0 && $row['daysEnd'] > 0){
+                    $data['table'] .= '<td>Starts in '. $row['daysStart']. ' day(s)</td>';
+                }
             }
             else{
                 $data['table'] .= '<td></td>';

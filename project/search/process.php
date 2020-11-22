@@ -38,7 +38,7 @@ if (!empty($errors)) {
     $data['errors']  = $errors;
 } else {
     $data['success'] = true;
-    $data['message'] = 'Search sucessfull!';
+    $data['message'] = 'Search sucessful!';
 }
 
 //Return all data to an AJAX call
@@ -63,17 +63,20 @@ function get_projects_by_search($name, $creator, $date){
     //Initialize order by query
     $query_order_by = "";
 
+    //Initialize date array
+    $dateArray = array('DATE_CREATED_ASC', 'DATE_CREATED_DESC', 'DATE_UPDATED_ASC', 'DATE_UPDATED_DESC');
+
     //Check sort-by date
-    if($date == 'DATE_CREATED_ASC'){
+    if($date == $dateArray[0]){
         $query_order_by = "ORDER BY date_created ASC";
     }
-    else if($date == 'DATE_CREATED_DESC'){
+    else if($date == $dateArray[1]){
         $query_order_by = "ORDER BY date_created DESC";
     }
-    else if($date == 'DATE_UPDATED_ASC'){
+    else if($date == $dateArray[2]){
         $query_order_by = "ORDER BY date_updated ASC";
     }
-    else if($date == 'DATE_UPDATED_DESC'){
+    else if($date == $dateArray[3]){
         $query_order_by = "ORDER BY date_updated DESC";
     }
 
