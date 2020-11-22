@@ -85,10 +85,10 @@ export function countPendingRequests(){
 }
 
 //Function to paginate table
-export function paginateTable(){
+export function paginateTable(tableId){
     $('.pager').empty();
 
-    $('table').pageMe({
+    $(tableId).pageMe({
         pagerSelector: '.pager',
         activeColor: 'blue',
         prevText: 'Anterior',
