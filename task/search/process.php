@@ -183,7 +183,7 @@ function get_project_tasks_by_search($name, $projectId, $status, $date, $days){
             $data['table'] .= '<td>' . $status . '</td>';
 
             //Remaining days
-            if(!empty($row['daysStart']) && !empty($row['daysEnd'])){
+            if(isset($row['daysStart']) && isset($row['daysEnd'])){
                 if($row['daysStart'] <= 0 && $row['daysEnd'] > 0){
                     $data['table'] .= '<td>Ends in '. $row['daysEnd']. ' day(s)</td>';
                 }
