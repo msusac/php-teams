@@ -135,7 +135,7 @@ function check_request($projectId, $userToId){
 
         //Check if row is empty or not
         if(!empty($row))
-            $errors['project'] = 'You have already sent same request to that user before!';
+            $errors['project'] = 'You have already sent same pending request to that user before!';
     }
     else{
         $errors['sql'] = mysqli_error($connection);
