@@ -58,8 +58,8 @@ define('APP_ROOT', $_SERVER["DOCUMENT_ROOT"] . '/php-teams/');
                                             <th>Task</th>
                                             <th>Project</th>
                                             <th>Status</th>
-                                            <th>End Date</th>
-                                            <th>Ends On</th>
+                                            <th>Ends in</th>
+                                            <th>Expires on</th>
                                         </thead>
                                         <tbody>';
                         
