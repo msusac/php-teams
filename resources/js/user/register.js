@@ -1,82 +1,135 @@
-$(document).ready(function () {
+// Fields
+const btnRegisterClear = $('#btn-register-clear');
+const btnRegisterClose = $('#btn-register-close');
 
-    //Clear form on button click
-    $('#register-clear-btn').click(function () {
+const formRegister = $('#form-user-register');
 
-        //Clear validation messages
-        clearMessages();
+const registerInputUsername = $('#form-user-register :input[name="username"]');
+const registerInputEmail = $('#form-user-register :input[name="email"]');
+const registerInputPassword = $('#form-user-register :input[name="password"]');
+const registerInputPasswordConfirm = $('#form-user-register :input[name="password_confirm"]');
 
-        //Clear fields
-        clearFields();
-    });
+// Clear messages function
+const clearRegisterMessages = () => {
 
-    //Call the action on form submit
-    $('#form-user-register').submit(function (event) {
+    $('#text-error').remove();
+    $('#text-success').remove();
 
-        //Clear validation messages
-        clearMessages();
+    $('.green-text').remove();
+    $('.red-text').remove();
+}
 
-        //Serialize form data
-        var formData = $(this).serialize();
+// Clear form fields function
+const clearRegisterFields = () => {
 
-        //Process form
-        $.ajax({
-            type: "POST",
-            url: "/php-teams/user/register/process.php",
-            data: formData,
-            dataType: "json",
-            encode: true,
+    registerInputUsername.val('');
+    registerInputEmail.val('');
+    registerInputPassword.val('');
+    registerInputPasswordConfirm.val('');
+}
+
+// Register function
+const register = () => {
+
+    // Serialize form data
+    var formData = $(this).serialize();
+
+    // Process form
+    $.ajax({
+        type: "POST",
+        url: "/php-teams/api/user/register.php",
+        data: formData,
+        dataType: "json",
+        encode: true,
+    })
+
+        // Done promise callback
+        .done(function (data) {
+
+            // Process Done
+            if (data.success) {
+
+                // Clear form fields
+                clearRegisterFields();
+
+                // Show success message
+                M.toast({ html: data.message, classes: 'green rounded' });
+            }
+
+            // Process Failed - Show error messages
+            else {
+
+                // Show username error message
+                if (data.errors.username)
+                    registerInputUsername.after('<div class="red-text" id="text-error">' + data.errors.username + '</div>');
+
+                // Show email error message
+                if (data.errors.email)
+                    registerInputEmail.after('<div class="red-text" id="text-error">' + data.errors.email + '</div>');
+
+                // Show password error message
+                if (data.errors.password)
+                    registerInputPassword.after('<div class="red-text" id="text-error">' + data.errors.password + '</div>');
+
+                // Show password confirm error message
+                if (data.errors.password_confirm)
+                    registerInputPasswordConfirm.after('<div class="red-text" id="text-error">' + data.errors.password_confirm + '</div>');
+
+                // Show general error message
+                if (data.errors.general)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
+
+                // Show sql error message
+                if (data.errors.sql)
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
+            }
         })
-            //Done promise callback
-            .done(function (data) {
-                //Show validation errors
-                if (!data.success) {
-                    if (data.errors.username) {
-                        $('#form-user-register :input[name="username"]').after('<div class="red-text" id="text-error">' + data.errors.username + '</div>');
-                    }
-                    if (data.errors.email) {
-                        $('#form-user-register :input[name="email"]').after('<div class="red-text" id="text-error">' + data.errors.email + '</div>');
-                    }
 
-                    if (data.errors.password) {
-                        $('#form-user-register :input[name="password"]').after('<div class="red-text" id="text-error">' + data.errors.password + '</div>');
-                    }
+        // Fail promise callback
+        .fail(function (data) {
 
-                    if (data.errors.sql) {
-                        M.toast({ html: data.errors.sql, classes: 'red rounded' });
-                    }
-                }
-                else {
-                    //Clear fields
-                    clearFields();
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
+            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
+        });
+}
 
-                    //Show toast message
-                    M.toast({ html: data.message, classes: 'green rounded' });
-                }
-            })
-            //Fail promise callback
-            .fail(function (data) {
-                //Server failed to respond - show error message
-                M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-            });
+$(function () {
 
-        //Prevent form from refreshing page
-        event.preventDefault();
+    // Clear form on button click
+    btnRegisterClear.on('click', function () {
+
+        // Clear fields
+        clearRegisterFields();
+
+        // Clear form fields
+        clearRegisterMessages();
     });
 
-    //Clear messages
-    function clearMessages() {
-        $('#text-error').remove();
-        $('#text-sucess').remove();
-        $('.green-text').remove();
-        $('.red-text').remove();
-    }
+    // Clear fields and messages upong closing modal
+    btnRegisterClose.on('click', function () {
 
-    //Clear fields
-    function clearFields() {
-        $('#form-user-register :input[name="username"]').val('');
-        $('#form-user-register :input[name="email"]').val('');
-        $('#form-user-register :input[name="password"]').val('');
-        $('#form-user-register :input[name="password_repeat"]').val('');
-    }
+        // Clear form fields
+        clearRegisterFields();
+
+        // Clear messages
+        clearRegisterMessages();
+    });
+
+    // Call the action on form submit
+    formRegister.on('submit', function (event) {
+
+        // Prevent form from refreshing page
+        event.preventDefault();
+
+        // Clear validation messages
+        clearRegisterMessages();
+        
+        register();
+    });
 });

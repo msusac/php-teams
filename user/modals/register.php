@@ -2,7 +2,7 @@
     <div class="modal-content">
         <h4>Sign Up</h4>
         <div class="row">
-            <form class="col s12" method="POST" action="process.php" id="form-user-register">
+            <form class="col s12" method="POST" action="" id="form-user-register">
                 <div class="row modal-form-row">
                     <div class="input-field col s12">
                         <label for="username">Username</label>
@@ -23,14 +23,14 @@
                 </div>
                 <div class="row modal-form-row">
                     <div class="input-field col s12">
-                        <label for="password_repeat">Repeat Password</label>
-                        <input id="password_repeat" name="password_repeat" type="password" class="validate" required>
+                        <label for="password_confirm">Confirm Password</label>
+                        <input id="password_confirm" name="password_confirm" type="password" class="validate" required>
                     </div>
                 </div>
                 <div class="row center-align">
                     <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Register</button>
-                    <a class="modal-action waves-effect btn brand" id="register-clear-btn">Clear</a>
-                    <a class="modal-action modal-close waves-effect btn brand">Close</a>
+                    <a class="modal-action waves-effect btn brand" id="btn-register-clear">Clear</a>
+                    <a class="modal-action modal-close waves-effect btn brand" id="btn-register-close">Close</a>
                 </div>
             </form>
         </div>

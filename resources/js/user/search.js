@@ -1,60 +1,93 @@
-$(document).ready(function () {
+// Fields
+const btnUserSearchClear = $('#btn-user-search-clear');
+const formUserSearch = $('#form-user-search');
 
-    //Show default results upon loading page
-    var formData = $('#form-users-search').serialize();
-    searchUsersTable(formData);
+const userSearchInputUsername  = $('#form-user-search :input[name="username"]');
+const userSearchInputEmail = $('#form-user-search :input[name="email"]');
+const userSearchSelectAll = $('#form-user-search select');
 
-    //Call the action on form submit
-    $('#form-users-search').submit(function (event) {
+var tableUser = $("#table-user tbody");
 
-        //Serialize form data
-        var formData = $(this).serialize();
+// Function to clear user search table
+const clearSearchUser = () => {
 
-        //Call function
-        searchUsersTable(formData);
+    userSearchInputUsername .val('');
+    userSearchInputEmail.val('');
+    userSearchSelectAll.val('');
+    userSearchSelectAll.formSelect();
 
-        //Prevent form from refreshing page
-        event.preventDefault();
-    });
+    searchUser();
+}
 
-    //Clear form and reset table on button click
-    $('#users-search-clear-btn').click(function () {
-        $('#form-users-search :input[name="username"]').val('');
-        $('#form-users-search :input[name="email"]').val('');
-        $('#form-users-search select').val('');
+// Function for searching and displaying user table
+const searchUser = () => {
 
-        var formData = $('#form-users-search').serialize();
-        searchUsersTable(formData);
-    });
-});
+    var formData = formUserSearch.serialize();
 
-//Function for searching and displaying users table
-function searchUsersTable(formData) {
     $.ajax({
         type: "POST",
-        url: "/php-teams/user/search/process.php",
+        url: "/php-teams/api/user/search.php",
         data: formData,
         dataType: "json",
         encode: true,
     })
-        //Done promise callback
+
+        // Done promise callback
         .done(function (data) {
-            //Show validation errors
-            if (!data.success) {
-                if (data.errors.sql) {
-                    //Show sql error message
-                    console.log(data.errors.sql);
-                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
-                }
+
+            // Process Done
+            if (data.success) {
+
+                // Show data table
+                tableUser.html(data.table);
             }
+
+            // Process Failed - Show Error Messages
             else {
-                //Show data table
-                $("#table-users tbody").html(data.table);
+
+                // Show general error message
+                if (data.errors.general)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show sql error message
+                if (data.errors.sql)
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
             }
         })
-        //Fail promise callback
+        // Fail promise callback
         .fail(function (data) {
-            //Server failed to respond - show error message
+
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 }
+
+$(function () {
+
+    // Show default results upon loading page
+    searchUser();
+
+    // Clear form and reset table on button click
+    btnUserSearchClear.on('click', function () {
+        clearSearchUser();
+    });
+
+    // Call the action on form submit
+    formUserSearch.on('submit', function (event) {
+
+        // Call search function
+        searchUser();
+
+        // Prevent form from refreshing page
+        event.preventDefault();
+    });
+});
+
+const _searchUser = searchUser;
+export { _searchUser as searchUser };

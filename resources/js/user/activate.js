@@ -1,100 +1,64 @@
-//Function for activating user
-function activateUser(username) {
+import { readUserById } from './read.js';
+import { searchUserTable } from './search.js';
 
-    //Process form
+// Fields
+var tableUser = $('#table-user tbody');
+
+// Function for activating user by id
+const activateUserById = (id) => {
+
+    // Process form
     $.ajax({
-        type: "POST",
-        url: "/php-teams/user/activate/process.php",
-        data: {
-            username: username
-        },
+        type: "GET",
+        url: "/php-teams/api/user/activate.php?id=" + id,
         dataType: "json",
-        encode: true,
     })
-        //Done promise callback
+
+        // Done promise callback
         .done(function (data) {
+
+            // Process Done
             if (data.success) {
+
+                // Show success message
                 M.toast({ html: data.message, classes: 'green rounded' });
-                readUser(username);
 
-                //Refresh users table if it exists
-                if($('#table-users').length){
-                    var formData = $('#form-users-search').serialize();
-                    searchUsersTable(formData);
-                    readUser(username);
+                // Read user by username
+                readUserById(id);
+
+                // Refresh users table if it exists
+                if (tableUser.length) {
+
+                    // Refresh user table
+                    searchUserTable();
                 }
             }
+
+            // Process Failed - Show error messages
+            else {
+
+                // Show general error message
+                if (data.errors.general)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show sql error message
+                if (data.errors.sql)
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
+            }
         })
-        //Fail promise callback
+
+        // Fail promise callback
         .fail(function (data) {
-            console.log(data);
+
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 }
 
-//Function for showing user details
-function readUser(username) {
-
-    //Process form
-    $.ajax({
-        type: "POST",
-        url: "/php-teams/user/read/process.php",
-        data: {
-            username: username
-        },
-        dataType: "json",
-        encode: true,
-    })
-        //Done promise callback
-        .done(function (data) {
-            if (data.success) {
-                //Show JSON data;
-                $('#modal-user-read tbody').html(data.table);
-
-                //Open modal
-                $('#modal-user-read').modal('close');
-                $('#modal-user-read').modal('open');
-            }
-            else {
-                if (data.errors.sql) {
-                    //Show sql error message
-                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
-                }
-            }
-        })
-        //Fail promise callback
-        .fail(function (data) {
-            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-        });
-};
-
-//Function for searching and displaying users table
-function searchUsersTable(formData) {
-    $.ajax({
-        type: "POST",
-        url: "/php-teams/users/search/process.php",
-        data: formData,
-        dataType: "json",
-        encode: true,
-    })
-        //Done promise callback
-        .done(function (data) {
-            //Show validation errors
-            if (!data.success) {
-                if (data.errors.sql) {
-                    //Show sql error message
-                    console.log(data.errors.sql);
-                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
-                }
-            }
-            else {
-                //Show data table
-                $("#table-users tbody").html(data.table);
-            }
-        })
-        //Fail promise callback
-        .fail(function (data) {
-            //Server failed to respond - show error message
-            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-        });
-}
+window.activateUserById = activateUserById;

@@ -23,14 +23,14 @@
                 </div>
                 <div class="row modal-form-row">
                     <div class="input-field col s12">
-                        <label for="password_new_repeat">New Repeat Password</label>
-                        <input id="password_new_repeat" name="password_new_repeat" type="password" class="validate">
+                        <label for="password_new_confirm">Confirm New Password</label>
+                        <input id="password_new_confirm" name="password_new_confirm" type="password" class="validate">
                     </div>
                 </div>
                 <div class="row center-align">
                     <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Edit</button>
-                    <a class="modal-action waves-effect btn brand" id="edit-user-clear-btn">Clear</a>
-                    <a class="modal-action modal-close waves-effect btn brand">Close</a>
+                    <a class="modal-action waves-effect btn brand" id="btn-user-edit-clear">Clear</a>
+                    <a class="modal-action modal-close waves-effect btn brand" id="btn-user-edit-close">Close</a>
                 </div>
             </form>
         </div>

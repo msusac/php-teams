@@ -1,134 +1,195 @@
-$(document).ready(function () {
+import { readUserById } from './read.js';
 
-    //Clear form on button click
-    $('#edit-user-clear-btn').click(function () {
+// Fields
+const btnUserEditClose = $("#btn-user-edit-close");
+const btnUserEditClear = $("#btn-user-edit-clear");
 
-        //Clear validation messages
-        clearMessages();
+const userEditInputFullname = $('#form-user-edit :input[name="fullname"]');
+const userEditInputPasswordOld = $('#form-user-edit :input[name="password_old"]');
+const userEditInputPasswordNew = $('#form-user-edit :input[name="password_new"]');
+const userEditInputPasswordNewConfirm = $('#form-user-edit :input[name="password_new_confirm"]');
 
-        //Clear fields
-        clearFields();
+const formUserEdit = $("#form-user-edit");
 
-        //Serialize form data
-        var formData = '';
+const modalUserEdit = $('#modal-user-edit');
 
-        //Process form
-        $.ajax({
-            type: "POST",
-            url: "/php-teams/user/edit/get.php",
-            data: formData,
-            dataType: "json",
-            encode: true,
-        })
-            //Done promise callback
-            .done(function (data) {
-                if (data.success) {
-                    //Update field
-                    $('#form-user-edit :input[name="fullname"]').val(data.fullname);
-                }
-            })
-            //Fail promise callback
-            .fail(function (data) {
-                M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-            });
-    });
+// Clear messages function
+const clearEditUserMessages = () => {
 
-    //Call the action on form submit
-    $('#form-user-edit').submit(function (event) {
+    $('#text-error').remove();
+    $('#text-success').remove();
 
-        //Clear validation messages
-        clearMessages();
+    $('.green-text').remove();
+    $('.red-text').remove();
+}
 
-        //Serialize form data
-        var formData = $(this).serialize();
+// Clear form fields function
+const clearEditUserFields = () => {
 
-        //Process form
-        $.ajax({
-            type: "POST",
-            url: "/php-teams/user/edit/process.php",
-            data: formData,
-            dataType: "json",
-            encode: true,
-        })
-            //Done promise callback
-            .done(function (data) {
-                //Show validation errors
-                if (!data.success) {
-                    if (data.errors.password_old) {
-                        $('#form-user-edit :input[name="password_old"]').after('<div class="red-text" id="text-error">' + data.errors.password_old + '</div>');
-                    }
-                    if (data.errors.password_new) {
-                        $('#form-user-edit :input[name="password_new"]').after('<div class="red-text" id="text-error">' + data.errors.password_new + '</div>');
-                    }
+    userEditInputPasswordOld.val('');
+    userEditInputPasswordNew.val('');
+    userEditInputPasswordNewConfirm.val('');
+}
 
-                    if (data.errors.password_new_repeat) {
-                        $('#form-user-edit :input[name="password_new_repeat]').after('<div class="red-text" id="text-error">' + data.errors.password_new_repeat + '</div>');
-                    }
-                }
-                else {
-                    //Clear form fields
-                    clearFields();
+// Edit User function
+const editUser = () => {
 
-                    //Show toast message
-                    M.toast({ html: data.message, classes: 'green rounded' });
-                }
-            })
-            //Fail promise callback
-            .fail(function (data) {
-                //Server failed to respond - show error message
-                M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-            });
+    var formData = formUserEdit.serialize();
 
-        //Prevent form from refreshing page
-        event.preventDefault();
-    });
-
-
-    //Clear messages
-    function clearMessages() {
-        $('#text-error').remove();
-        $('#text-sucess').remove();
-        $('.green-text').remove();
-        $('.red-text').remove();
-    }
-
-    //Clear fields
-    function clearFields() {
-        $('#form-user-edit :input[name="password_old"]').val('');
-        $('#form-user-edit :input[name="password_new"]').val('');
-        $('#form-user-edit :input[name="password_new_repeat"]').val('');
-    }
-});
-
-//Open edit user modal
-function openEditUserModal() {
-
-    //Serialize form data
-    var formData = '';
-
-    //Process form
+    // Process form
     $.ajax({
         type: "POST",
-        url: "/php-teams/user/edit/get.php",
+        url: "/php-teams/api/user/edit.php",
         data: formData,
         dataType: "json",
         encode: true,
     })
-        //Done promise callback
+
+        // Done promise callback
         .done(function (data) {
+
+            // Process Done
             if (data.success) {
-                //Update field
-                $('#form-user-edit :input[name="fullname"]').val(data.fullname);
 
-                //Close modal
-                $('#modal-user-read').modal('close');
+                // Clear messages
+                clearEditUserMessages();
 
-                //Open modal
-                $('#modal-user-edit').modal('open');
+                // Clear form fields
+                clearEditUserFields();
+
+                // Show success message
+                M.toast({ html: data.message, classes: 'green rounded' });
+
+                //Update Read User Modal
+                readUserById(data.user);
+            }
+
+            // Process Failed - Show error messages
+            else {
+
+                // Show old password error message
+                if (data.errors.password_old)
+                    userEditInputPasswordOld.after('<div class="red-text" id="text-error">' + data.errors.password_old + '</div>');
+
+                // Show new password error message
+                if (data.errors.password_new)
+                    userEditInputPasswordNew.after('<div class="red-text" id="text-error">' + data.errors.password_new + '</div>');
+
+                // Show confirm new password error message
+                if (data.errors.password_new_confirm)
+                    userEditInputPasswordNewConfirm.after('<div class="red-text" id="text-error">' + data.errors.password_new_confirm + '</div>');
+
+                // Show general error message
+                if (data.errors.general)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
+
+                // Show sql error message
+                if (data.errors.sql)
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
             }
         })
-        //Fail promise callback
+
+        // Fail promise callback
         .fail(function (data) {
+
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
             M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
         });
 }
+
+
+// Open User Edit Modal
+const openUserEdit = () => {
+
+    // Process form
+    $.ajax({
+        type: "GET",
+        url: "/php-teams/api/user/edit_get.php",
+    })
+
+        // Done promise callback
+        .done(function (data) {
+
+            // Process Done
+            if (data.success) {
+
+                // Open Edit modal
+                if (!modalUserEdit.hasClass('open'))
+                    modalUserEdit.modal('open');
+
+                // Update fullname field
+                userEditInputFullname.val(data.fullname);
+            }
+
+            // Process Failed - Show error messsages
+            else {
+
+                // Show general error message
+                if (data.errors.general)
+                    M.toast({ html: data.errors.general, classes: 'red rounded' });
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
+
+                // Show sql error message
+                if (data.errors.sql)
+                    M.toast({ html: data.errors.sql, classes: 'red rounded' });
+            }
+        })
+
+        // Fail promise callback
+        .fail(function (data) {
+
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
+            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
+        });
+}
+
+$(function () {
+
+    // Clear form on button click
+    btnUserEditClear.on('click', function () {
+
+        // Clear form fields
+        clearEditUserFields();
+
+        // Retrieve data
+        openUserEdit();
+    });
+
+    // Clear fields and messages upong closing modal
+    btnUserEditClose.on('click', function () {
+
+        // Clear messages
+        clearEditUserMessages();
+
+        // Clear form fields
+        clearEditUserFields();
+
+        // Remove fullname field
+        userEditInputFullname.val('');
+    });
+
+    // Call the action on form submit
+    formUserEdit.on('submit', function (event) {
+
+        // Prevent form from refreshing page
+        event.preventDefault();
+
+        // Clear messages
+        clearEditUserMessages();
+
+        editUser();
+    });
+});
+
+window.openUserEdit = openUserEdit;

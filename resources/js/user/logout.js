@@ -1,33 +1,56 @@
-$(document).ready(function () {
+// Fields
+const formLogout = $('#form-user-logout');
 
-    //Call the action on form submit
-    $('#form-user-logout').submit(function (event) {
+// Logout Function
+const logout = () => {
 
-        //Serialize form data
-        var formData = '';
+    // Process form
+    $.ajax({
+        type: "GET",
+        url: "/php-teams/api/user/logout.php",
+    })
 
-        //Process form
-        $.ajax({
-            type: "POST",
-            url: "/php-teams/user/logout/process.php",
-            data: formData,
-            dataType: "json",
-            encode: true,
+        // Done promise callback
+        .done(function (data) {
+
+            // Process Done
+            if (data.success) {
+
+                // Show success message
+                M.toast({ html: data.message, classes: 'green rounded' });
+
+                // Refresh page
+                location.reload();
+            }
+
+            // Process Failed - Show error messages
+            else {
+
+                // Show session error message
+                if (data.errors.session)
+                    M.toast({ html: data.errors.session, classes: 'red rounded' });
+            }
         })
-            //Done promise callback
-            .done(function (data) {
-                if (data.success) {
-                    M.toast({ html: data.message, classes: 'green rounded' });
-                    location.reload();
-                }
-            })
-            //Fail promise callback
-            .fail(function (data) {
-                //Server failed to respond - show error message
-                M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
-            });
 
-        //Prevent form from refreshing page
+        // Fail promise callback
+        .fail(function (data) {
+
+            // Server failed to respond - show error message
+            console.error('Server error');
+            console.error(data);
+            M.toast({ html: 'Could not reach server, please try again later.', classes: 'red rounded' });
+        });
+}
+
+$(function () {
+
+    // Call the action on form submit
+    formLogout.on('submit', function (event) {
+
+        // Prevent form from refreshing page
         event.preventDefault();
+        
+        // Logout
+        logout();
     });
 });

@@ -2,7 +2,7 @@
     <div class="modal-content">
         <h4>Sign In</h4>
         <div class="row">
-            <form class="col s12" method="POST" action="process.php" id="form-user-login">
+            <form class="col s12" method="POST" action="" id="form-user-login">
                 <div class="row modal-form-row">
                     <div class="input-field col s12">
                         <label for="username">Username</label>
@@ -17,7 +17,7 @@
                 </div>
                 <div class="row center-align">
                     <button type="submit" name="submit" value="submit" class="modal-action waves-effect btn brand">Login</button>
-                    <a class="modal-action modal-close waves-effect btn brand">Close</a>
+                    <a class="modal-action modal-close waves-effect btn brand" id="btn-login-close">Close</a>
                 </div>
             </form>
         </div>
